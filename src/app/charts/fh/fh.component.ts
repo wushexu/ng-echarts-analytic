@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 
 import * as echarts from 'echarts';
 
+import {DataService} from '../../data/DataService';
+
 @Component({
   selector: 'app-fh',
   templateUrl: './fh.component.html',
@@ -9,10 +11,12 @@ import * as echarts from 'echarts';
 })
 export class FhComponent implements OnInit {
 
-  constructor() {
+  constructor(private dataService: DataService) {
   }
 
   ngOnInit(): void {
+
+    console.log('ngOnInit ...');
 
     const holder: HTMLDivElement = document.getElementById('main') as HTMLDivElement;
     const myChart: echarts.ECharts = echarts.init(holder);

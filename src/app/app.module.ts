@@ -17,6 +17,7 @@ import {FhComponent} from './charts/fh/fh.component';
 import {AppComponent} from './app.component';
 import {SidebarComponent} from './sidebar/sidebar.component';
 import {DashboardComponent} from './dashboard/dashboard.component';
+import {DataService} from './data/DataService';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,9 @@ import {DashboardComponent} from './dashboard/dashboard.component';
     MatCardModule,
     MatMenuModule
   ],
-  providers: [],
+  providers: [
+    DataService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
