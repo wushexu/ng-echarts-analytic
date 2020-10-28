@@ -1,9 +1,22 @@
 <mat-card>
   <mat-card-content>
     <div class="config-column">
-      <div class="title">维度</div>
-      <mat-radio-group (change)="dimSelected($event)">
-        <ul class="dim-options">
+      <div class="title">指标</div>
+      <mat-radio-group [(ngModel)]="selectedMeasure" (change)="measureSelected($event)">
+        <ul class="radio-options">
+          <li *ngFor="let option of measureOptions">
+            <!--<mat-checkbox [(ngModel)]="option.selected" color="accent" (ngModelChange)="refreshChart()">
+              {{option.label}}
+            </mat-checkbox>-->
+            <mat-radio-button color="accent" [value]="option.name">{{option.label}}</mat-radio-button>
+          </li>
+        </ul>
+      </mat-radio-group>
+    </div>
+    <div class="config-column">
+      <div class="title">维度1</div>
+      <mat-radio-group [(ngModel)]="selectedDim" (change)="dimSelected($event)">
+        <ul class="radio-options">
           <li *ngFor="let option of dimOptions">
             <!--<mat-checkbox [(ngModel)]="option.selected" color="primary" (ngModelChange)="refreshChart()">
               {{option.label}}
@@ -14,16 +27,20 @@
       </mat-radio-group>
     </div>
     <div class="config-column">
-      <div class="title">指标</div>
-      <ul>
-        <li *ngFor="let option of measureOptions">
-          <mat-checkbox [(ngModel)]="option.selected"
-                        color="accent"
-                        (ngModelChange)="refreshChart()">
-            {{option.label}}
-          </mat-checkbox>
-        </li>
-      </ul>
+      <div class="title">维度2</div>
+      <mat-radio-group [(ngModel)]="selectedDim2" (change)="dimSelected2($event)">
+        <ul class="radio-options">
+          <li *ngFor="let option of dimOptions">
+            <!--<mat-checkbox [(ngModel)]="option.selected" color="primary" (ngModelChange)="refreshChart()">
+              {{option.label}}
+            </mat-checkbox>-->
+            <mat-radio-button color="primary" [value]="option.name">{{option.label}}</mat-radio-button>
+          </li>
+          <li>
+            <mat-radio-button color="primary" value="">（无）</mat-radio-button>
+          </li>
+        </ul>
+      </mat-radio-group>
     </div>
     <div class="config-column filters">
       <div class="title">筛选</div>
@@ -68,6 +85,21 @@
               <mat-option *ngFor="let opt of catOptions" [value]="opt.value">
                 {{opt.label}}
               </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </li>
+      </ul>
+    </div>
+    <div class="config-column filters">
+      <div class="title">图表</div>
+      <ul>
+        <li>
+          <mat-form-field>
+            <mat-label>类型</mat-label>
+            <mat-select [(ngModel)]="chartType" (selectionChange)="refreshChart()">
+              <mat-option value="bar">柱状图</mat-option>
+              <mat-option value="line">折线图</mat-option>
+              <mat-option value="pie">饼状图</mat-option>
             </mat-select>
           </mat-form-field>
         </li>

@@ -18,7 +18,7 @@ interface DimOption {
 interface MeasureOption {
   name: string;
   label: string;
-  selected?: boolean;
+  // selected?: boolean;
   field: FieldDef;
 }
 
@@ -37,9 +37,13 @@ export class GenericChartComponent implements OnInit, AfterViewInit {
   provOptions: Option[];
 
   chartType = 'bar';
-  selectedDim: string;
+  chartWidth = 1200;
+  chartHeight = 400;
+  selectedDim = 'cat';
+  selectedDim2 = '';
+  selectedMeasure = 'zj';
 
-  fhDateFilter: '' | '1d' | '1w' = '';
+  fhDateFilter: '' | '1d' | '1w' = '1d';
   catFilter = '';
   fhsfFilter = '';
   shsfFilter = '';
@@ -75,6 +79,16 @@ export class GenericChartComponent implements OnInit, AfterViewInit {
     this.refreshChart();
   }
 
+  dimSelected2($event: MatRadioChange): void {
+    this.selectedDim2 = $event.value;
+    this.refreshChart();
+  }
+
+  measureSelected($event: MatRadioChange): void {
+    this.selectedMeasure = $event.value;
+    this.refreshChart();
+  }
+
   refreshChart(): void {
     if (!this.chartDiv) {
       return;
@@ -82,11 +96,14 @@ export class GenericChartComponent implements OnInit, AfterViewInit {
     if (!this.selectedDim) {
       return;
     }
-    let dims = [this.selectedDim];
-    let measures = this.measureOptions.filter(opt => opt.selected).map(opt => opt.field.name);
-    if (measures.length === 0) {
+    if (!this.selectedMeasure) {
       return;
     }
+    let dims = [this.selectedDim];
+    if (this.selectedDim2 && this.selectedDim2 !== this.selectedDim) {
+      dims.push(this.selectedDim2);
+    }
+    let measures = [this.selectedMeasure];
 
     if (this.myChart) {
       this.myChart.clear();
@@ -117,8 +134,17 @@ export class GenericChartComponent implements OnInit, AfterViewInit {
     }
 
     let dataset = query({dims, measures, slice});
-    console.log(dataset.source.length);
+    // console.log(dataset.source.length);
     // console.log('result dimensions: ' + JSON.stringify(dataset.dimensions, null, 2));
+
+    let series = [];
+    if (dims.length > 1) {
+      for (let di = 0; di < dataset.dimensions.length - 2; di++) {
+        series.push({type: this.chartType});
+      }
+    } else {
+      series.push({type: this.chartType});
+    }
 
     const option: EChartOption = {
       legend: {},
@@ -126,7 +152,7 @@ export class GenericChartComponent implements OnInit, AfterViewInit {
       dataset,
       xAxis: {type: 'category'},
       yAxis: {},
-      series: measures.map((name) => ({type: this.chartType}))
+      series
     };
 
     this.myChart.setOption(option);

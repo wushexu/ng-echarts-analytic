@@ -1,4 +1,6 @@
 import alasql from 'alasql';
+import {groupBy, reduce} from 'underscore';
+
 import {FieldDef, TableKeys, TableDef, Tables, TableMap} from './schema';
 import {CubeDimension, Measure, Cube, cubes} from './cube';
 
@@ -30,7 +32,7 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
     throw new Error(`Cube ${cubeName} Not Exists.`);
   }
 
-  let dimensionAndMeasures = [];
+  let chartDimensions = [];
 
   let cubeDimensions = dims.map(dim => {
     let cubeDimension: CubeDimension = cube.getDimension(dim);
@@ -40,7 +42,7 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
     let field = cubeDimension.field;
     // {name: 'fhsf', displayName: '省份', type: 'ordinal'}
     let type = field.type === 'string' ? 'ordinal' : field.type;
-    dimensionAndMeasures.push({name: cubeDimension.name, displayName: cubeDimension.desc, type});
+    chartDimensions.push({name: cubeDimension.name, displayName: cubeDimension.desc, type});
     return cubeDimension;
   });
 
@@ -54,7 +56,6 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
     if (!measure) {
       throw new Error(`Measure ${name} Not Exists.`);
     }
-    dimensionAndMeasures.push({name: measure.name, displayName: measure.desc, type: measure.type});
     return measure;
   });
 
@@ -117,15 +118,45 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
   let data = alasql(sql);
   console.log(data);
 
-// dataset: {
-//   dimensions: [
-//     {name: 'fhsf', displayName: '省份', type: 'ordinal'},
-//     {name: 'zj', displayName: '总价', type: 'number'},
-//     {name: 'yf', displayName: '运费', type: 'number'}
-//   ],
-//     source: data
-// }
-  return {dimensions: dimensionAndMeasures, source: data};
+  if (cubeDimensions.length > 1 && measureFields.length === 1) {
+    let dimField = cubeDimensions[0].field.name;
+    let dimField2 = cubeDimensions[1].field.name;
+    let meaField = measureFields[0].name;
+    let groups = groupBy(data, obj => obj[dimField]);
+    let newData = [];
+
+    let dim2Values = new Set();
+
+    for (let k in groups) {
+      if (!groups.hasOwnProperty(k)) {
+        continue;
+      }
+      let rs = groups[k];
+      let row0 = rs[0];
+      for (let row of rs) {
+        let meaVal = row[meaField];
+        let dim2Val = row[dimField2];
+        dim2Values.add(dim2Val);
+        row0[dim2Val] = meaVal;
+      }
+      delete row0[dimField2];
+      delete row0[meaField];
+      newData.push(row0);
+    }
+    data = newData;
+
+    for (let dim2Val of dim2Values) {
+      chartDimensions.push({name: dim2Val, displayName: dim2Val, type: 'ordinal'});
+    }
+
+    console.log(data);
+  } else {
+    measureFields.forEach(measure => {
+      chartDimensions.push({name: measure.name, displayName: measure.desc, type: measure.type});
+    });
+  }
+
+  return {dimensions: chartDimensions, source: data};
 }
 
 export {setupCube, query, CubeDimension, Measure, Cube, cubes};
