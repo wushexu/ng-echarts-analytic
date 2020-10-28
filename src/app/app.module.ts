@@ -15,15 +15,15 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import {MatCardModule} from '@angular/material/card';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatRadioModule} from '@angular/material/radio';
+import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
 
 // import {MatAutocompleteModule} from '@angular/material/autocomplete';
 // import {MatTooltipModule} from '@angular/material/tooltip';
 // import {MatExpansionModule} from '@angular/material/expansion';
 // import {MatDialogModule} from '@angular/material/dialog';
 // import {MatButtonToggleModule} from '@angular/material/button-toggle';
-// import {MatInputModule} from '@angular/material/input';
-// import {MatSelectModule} from '@angular/material/select';
-// import {MatRadioModule} from '@angular/material/radio';
 // import {MatTableModule} from '@angular/material/table';
 // import {MatPaginatorModule} from '@angular/material/paginator';
 // import {MatSortModule} from '@angular/material/sort';
@@ -61,7 +61,10 @@ import {GenericChartComponent} from './charts/generic/generic-chart.component';
     MatGridListModule,
     MatCardModule,
     MatMenuModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatRadioModule,
+    MatInputModule,
+    MatSelectModule
   ],
   providers: [
     DataService

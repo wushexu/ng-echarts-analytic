@@ -2,15 +2,16 @@
   <mat-card-content>
     <div class="config-column">
       <div class="title">维度</div>
-      <ul>
-        <li *ngFor="let option of dimOptions">
-          <mat-checkbox [(ngModel)]="option.selected"
-                        color="primary"
-                        (ngModelChange)="refreshChart()">
-            {{option.label}}
-          </mat-checkbox>
-        </li>
-      </ul>
+      <mat-radio-group (change)="dimSelected($event)">
+        <ul class="dim-options">
+          <li *ngFor="let option of dimOptions">
+            <!--<mat-checkbox [(ngModel)]="option.selected" color="primary" (ngModelChange)="refreshChart()">
+              {{option.label}}
+            </mat-checkbox>-->
+            <mat-radio-button color="primary" [value]="option.name">{{option.label}}</mat-radio-button>
+          </li>
+        </ul>
+      </mat-radio-group>
     </div>
     <div class="config-column">
       <div class="title">指标</div>
@@ -21,6 +22,54 @@
                         (ngModelChange)="refreshChart()">
             {{option.label}}
           </mat-checkbox>
+        </li>
+      </ul>
+    </div>
+    <div class="config-column filters">
+      <div class="title">筛选</div>
+      <ul>
+        <li>
+          <mat-form-field>
+            <mat-label>发货日期</mat-label>
+            <mat-select [(ngModel)]="fhDateFilter" (selectionChange)="refreshChart()">
+              <mat-option value="">（不限）</mat-option>
+              <mat-option value="1d">一天</mat-option>
+              <mat-option value="1w">最近一周</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </li>
+        <li>
+          <mat-form-field>
+            <mat-label>发货省份</mat-label>
+            <mat-select [(ngModel)]="fhsfFilter" (selectionChange)="refreshChart()" panelClass="province-select-panel">
+              <mat-option value="">（不限）</mat-option>
+              <mat-option *ngFor="let opt of provOptions" [value]="opt.value">
+                {{opt.label}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </li>
+        <li>
+          <mat-form-field>
+            <mat-label>收货省份</mat-label>
+            <mat-select [(ngModel)]="shsfFilter" (selectionChange)="refreshChart()" panelClass="province-select-panel">
+              <mat-option value="">（不限）</mat-option>
+              <mat-option *ngFor="let opt of provOptions" [value]="opt.value">
+                {{opt.label}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </li>
+        <li>
+          <mat-form-field>
+            <mat-label>商品分类</mat-label>
+            <mat-select [(ngModel)]="catFilter" (selectionChange)="refreshChart()">
+              <mat-option value="">（不限）</mat-option>
+              <mat-option *ngFor="let opt of catOptions" [value]="opt.value">
+                {{opt.label}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
         </li>
       </ul>
     </div>

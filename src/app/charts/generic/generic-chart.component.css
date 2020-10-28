@@ -1,6 +1,10 @@
 ul {
   list-style-type: none;
-  padding-left: 2em;
+  padding-left: 1em;
+}
+
+ul.dim-options li {
+  margin-top: 0.3em;
 }
 
 .config-card {
@@ -12,8 +16,20 @@ ul {
   vertical-align: top;
 }
 
+.config-column.filters {
+  width: 20em;
+}
+
+/*.config-column.filters ul li > * {*/
+/*  display: inline-block;*/
+/*}*/
+
+/*.mat-select {*/
+/*  width: initial;*/
+/*}*/
+
 .config-column:not(:first-child) {
-  margin-left: 2em;
+  margin-left: 3em;
 }
 
 .title {

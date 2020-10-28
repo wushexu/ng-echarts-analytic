@@ -14,6 +14,40 @@ body {
   padding: 1em;
 }
 
-.active-link {
-  color: #ff4081 !important;
+.province-select-panel.mat-select-panel {
+  display: flex;
+  flex-flow: row wrap;
+  max-width: 30em;
 }
+
+.province-select-panel.mat-select-panel .mat-option {
+  min-width: 7em;
+}
+
+.mat-primary-color {
+  color: #3f51b5;
+}
+
+.mat-accent-color {
+  color: #ff4081;
+}
+
+.mat-warn-color {
+  color: #f44336;
+}
+
+.mat-secondary-color {
+  color: rgba(0, 0, 0, .58)
+}
+
+.mat-disabled-color {
+  color: rgba(0, 0, 0, .38)
+}
+
+.active-link {
+  color: #3f51b5 !important;
+}
+
+/*.active-link {*/
+/*  color: #ff4081 !important;*/
+/*}*/

@@ -1,6 +1,6 @@
 import alasql from 'alasql';
 import {FieldDef, TableKeys, TableDef, Tables, TableMap} from './schema';
-import {CubeDimension, Cube, cubes} from './cube';
+import {CubeDimension, Measure, Cube, cubes} from './cube';
 
 function setupCube(): void {
 
@@ -33,7 +33,7 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
   let dimensionAndMeasures = [];
 
   let cubeDimensions = dims.map(dim => {
-    let cubeDimension = cube.getDimension(dim);
+    let cubeDimension: CubeDimension = cube.getDimension(dim);
     if (!cubeDimension) {
       throw new Error(`Dimension ${dim} Not Exists.`);
     }
@@ -49,21 +49,20 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
     measures = [cube.defaultMeasure];
   }
 
-  let measureFields = measures.map(measure => {
-    let measureField = cube.getMeasure(measure);
-    if (!measureField) {
-      throw new Error(`Measure ${measure} Not Exists.`);
+  let measureFields = measures.map(name => {
+    let measure: Measure = cube.getMeasure(name);
+    if (!measure) {
+      throw new Error(`Measure ${name} Not Exists.`);
     }
-    dimensionAndMeasures.push({name: measureField.name, displayName: measureField.desc, type: measureField.type});
-    return measureField;
+    dimensionAndMeasures.push({name: measure.name, displayName: measure.desc, type: measure.type});
+    return measure;
   });
 
-  let measureClause = measureFields.map(measureField => {
-    let measure = measureField.name;
-    if (measure === 'count') {
-      return `count(1) as [count]`;
+  let measureClause = measureFields.map(measure => {
+    if (measure.aggSql) {
+      return measure.aggSql;
     }
-    return `sum(${measure}) as ${measure}`;
+    return `sum(${measure.name}) as ${measure.name}`;
   }).join(',');
 
   let dimFieldNames = cubeDimensions.map(cdim => cdim.field.name);
@@ -83,10 +82,25 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
       let value = slice[dim];
       let fieldName = cubeDimension.field.name;
 
-      conds.push(`${fieldName}=${(typeof value === 'number') ? value : '\'' + value + '\''}`);
+      if (value.constructor && value.constructor.name === 'Array') {
+        // TODO:
+      } else if (typeof value === 'object') {
+        let {op, val} = value;
+        if (cubeDimension.field.type === 'string') {
+          val = `'${val}'`;
+        }
+        if (op === 'gt') {
+          conds.push(`${fieldName} > ${val}`);
+        } else if (op === 'lt') {
+          conds.push(`${fieldName} < ${val}`);
+        }
+      } else {
+        conds.push(`${fieldName}=${(typeof value === 'number') ? value : '\'' + value + '\''}`);
+      }
+
     }
     if (conds.length > 0) {
-      whereClause = conds.join(',');
+      whereClause = conds.join(' and ');
     }
   }
 
@@ -97,6 +111,7 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
     sql = sql + ' where ' + whereClause;
   }
   sql = sql + ' group by ' + groupByClause;
+  sql = sql + ' order by ' + dimFieldNames[0];
   console.log('Query: ' + sql);
 
   let data = alasql(sql);
@@ -113,4 +128,4 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
   return {dimensions: dimensionAndMeasures, source: data};
 }
 
-export {setupCube,query,CubeDimension, Cube, cubes};
+export {setupCube, query, CubeDimension, Measure, Cube, cubes};

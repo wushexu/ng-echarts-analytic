@@ -22,7 +22,7 @@ export class FhComponent implements AfterViewInit {
     const holder: HTMLDivElement = this.chartDiv.nativeElement as HTMLDivElement;
     const myChart: echarts.ECharts = echarts.init(holder);
 
-    let dataset = query({dims: ['发货省份'], measures: ['总价', '运费'], slice: {发货时间: '2020/9/16'}});
+    let dataset = query({dims: ['发货省份'], measures: ['总价', '运费'], slice: {发货日期: '2020/9/16'}});
     console.log(dataset.source.length);
 
     const option: EChartOption = {

@@ -1073,7 +1073,7 @@ function setupSite(): void {
 
 // 货运单
 function setupInvoice(): void {
-  const rs = ['id\t物流公司\t发货方\t发货城市0\t发货点\t发货时间\t预计到货时间\t实际到货时间\t收货方\t车辆id\t收货城市0\t收货点\t商品分类id\t商品数量\t商品重量\t总价\t运费\n',
+  const rs = ['id\t物流公司\t发货方\t发货城市0\t发货点\t发货日期\t预计到货日期\t实际到货日期\t收货方\t车辆id\t收货城市0\t收货点\t商品分类id\t商品数量\t商品重量\t总价\t运费\n',
     '1\t11\t30\t东莞市\t51\t2020/9/11\t2020/09/21\t2020/09/26\t30\t20\t东莞市\t57\t61\t300\t800\t9000\t700\n',
     '2\t12\t31\t广州市\t52\t2020/9/12\t2020/09/21\t2020/09/24\t31\t21\t广州市\t58\t62\t450\t700\t20000\t1700\n',
     '3\t13\t32\t中山市\t53\t2020/9/13\t2020/09/17\t2020/09/17\t32\t22\t中山市\t59\t63\t160\t2700\t7000\t1800\n',
@@ -6094,13 +6094,13 @@ export function loadData(): void {
   let catMap = new Map();
 
   const cityDim = TableMap.get(TableKeys.City);
-  for (let {city, province} of cityDim.data) {
-    cityProvinces.set(city, province);
+  for (let {name, province} of cityDim.data) {
+    cityProvinces.set(name, province);
   }
 
   const catDim = TableMap.get(TableKeys.Category);
-  for (let {id, category} of catDim.data) {
-    catMap.set(id, category);
+  for (let {id, name} of catDim.data) {
+    catMap.set(id, name);
   }
 
   const invoiceDim = TableMap.get(TableKeys.Invoice);

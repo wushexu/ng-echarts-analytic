@@ -13,6 +13,7 @@
     "no-trailing-whitespace": false,
     "prefer-for-of": false,
     "prefer-const": false,
+    "no-string-literal": false,
     "array-type": false,
     "arrow-return-shorthand": true,
     "curly": true,
