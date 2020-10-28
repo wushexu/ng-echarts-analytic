@@ -1,5 +1,5 @@
-import {FieldDef, DimensionKeys, DimensionDef, Dimensions, DimensionMap, loadDataBulk, loadDataRows} from './schema';
-//
+import {FieldDef, TableKeys, TableDef, Tables, TableMap, loadDataBulk, loadDataRows} from './schema';
+
 // 物流公司
 function setupLogisComp(): void {
   const wl = 'id\t名称\n' +
@@ -34,7 +34,7 @@ function setupLogisComp(): void {
     '39\t花朝物流\n' +
     '40\t竹秋物流\n';
 
-  const wlDim = DimensionMap.get(DimensionKeys.LogisComp);
+  const wlDim = TableMap.get(TableKeys.LogisComp);
   wlDim.data = loadDataBulk(wl, wlDim.fields);
 }
 
@@ -152,7 +152,7 @@ function setupVehicle(): void {
     '128\t豫E2958\t大货\n' +
     '129\t豫E5236\t大货\n';
 
-  const wlDim = DimensionMap.get(DimensionKeys.Vehicle);
+  const wlDim = TableMap.get(TableKeys.Vehicle);
   wlDim.data = loadDataBulk(wl, wlDim.fields);
 }
 
@@ -659,7 +659,7 @@ function setupCustomer(): void {
     '527\t珠峰万维科技发展有限公司\t甘肃省\t庆阳市\n' +
     '528\t欣安恒达科技有限公司\t甘肃省\t武威市\n';
 
-  const wlDim = DimensionMap.get(DimensionKeys.Customer);
+  const wlDim = TableMap.get(TableKeys.Customer);
   wlDim.data = loadDataBulk(wl, wlDim.fields);
 }
 
@@ -990,7 +990,7 @@ function setupCity(): void {
     '浙江省\t温州市\t120.699361\t27.993828\n' +
     '浙江省\t舟山市\t122.207106\t29.985553\n';
 
-  const wlDim = DimensionMap.get(DimensionKeys.City);
+  const wlDim = TableMap.get(TableKeys.City);
   wlDim.data = loadDataBulk(wl, wlDim.fields);
 }
 
@@ -1032,7 +1032,7 @@ function setupProvince(): void {
     '云南省\t\t102.710002\t25.045806\n' +
     '浙江省\t\t120.152585\t30.266597\n';
 
-  const wlDim = DimensionMap.get(DimensionKeys.Province);
+  const wlDim = TableMap.get(TableKeys.Province);
   wlDim.data = loadDataBulk(wl, wlDim.fields);
 }
 
@@ -1049,7 +1049,7 @@ function setupCategory(): void {
     '68\t药品、医疗器械\n' +
     '69\t其他\n';
 
-  const wlDim = DimensionMap.get(DimensionKeys.Category);
+  const wlDim = TableMap.get(TableKeys.Category);
   wlDim.data = loadDataBulk(wl, wlDim.fields);
 }
 
@@ -1067,7 +1067,7 @@ function setupSite(): void {
     '58\tLL建材市场\t建材市场\n' +
     '59\tLS商城\t商场\n';
 
-  const wlDim = DimensionMap.get(DimensionKeys.Site);
+  const wlDim = TableMap.get(TableKeys.Site);
   wlDim.data = loadDataBulk(wl, wlDim.fields);
 }
 
@@ -6075,7 +6075,7 @@ function setupInvoice(): void {
     // '4999\t33\t38\t东莞市\t58\t2020/9/13\t2020/09/23\t2020/09/28\t38\t62\t东莞市\t56\t64\t130\t1200\t7000\t700\n',
     '5000\t34\t39\t广州市\t59\t2020/9/17\t2020/09/26\t2020/09/30\t39\t63\t广州市\t56\t65\t330\t1400\t28000\t1400\n'];
 
-  const wlDim = DimensionMap.get(DimensionKeys.Invoice);
+  const wlDim = TableMap.get(TableKeys.Invoice);
   wlDim.data = loadDataRows(rs, wlDim.fields);
 }
 
@@ -6093,17 +6093,17 @@ export function loadData(): void {
   let cityProvinces = new Map();
   let catMap = new Map();
 
-  const cityDim = DimensionMap.get(DimensionKeys.City);
+  const cityDim = TableMap.get(TableKeys.City);
   for (let {city, province} of cityDim.data) {
     cityProvinces.set(city, province);
   }
 
-  const catDim = DimensionMap.get(DimensionKeys.Category);
+  const catDim = TableMap.get(TableKeys.Category);
   for (let {id, category} of catDim.data) {
     catMap.set(id, category);
   }
 
-  const invoiceDim = DimensionMap.get(DimensionKeys.Invoice);
+  const invoiceDim = TableMap.get(TableKeys.Invoice);
   for (let invoice of invoiceDim.data) {
     let {fhCity, shCity, cat_id} = invoice;
     invoice.fhsf = cityProvinces.get(fhCity);

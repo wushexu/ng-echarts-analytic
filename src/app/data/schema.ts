@@ -4,7 +4,7 @@ interface FieldDef {
   desc?: string;
 }
 
-interface DimensionDef {
+interface TableDef {
   key: string;
   name: string;
   fields: FieldDef[];
@@ -12,7 +12,7 @@ interface DimensionDef {
   data: any[];
 }
 
-const DimensionKeys = {
+const TableKeys = {
   LogisComp: 'LogisComp',
   Vehicle: 'Vehicle',
   Customer: 'Customer',
@@ -23,9 +23,9 @@ const DimensionKeys = {
   Invoice: 'Invoice'
 };
 
-const Dimensions: DimensionDef[] = [
+const Tables: TableDef[] = [
   {
-    key: DimensionKeys.LogisComp,
+    key: TableKeys.LogisComp,
     name: '物流公司',
     fields: [{name: 'id', type: 'int'},
       {name: 'name', type: 'string', desc: '名称'}],
@@ -33,7 +33,7 @@ const Dimensions: DimensionDef[] = [
     data: []
   },
   {
-    key: DimensionKeys.Vehicle,
+    key: TableKeys.Vehicle,
     name: '车辆',
     fields: [{name: 'id', type: 'int'},
       {name: 'plate', type: 'string', desc: '车牌号'},
@@ -42,7 +42,7 @@ const Dimensions: DimensionDef[] = [
     data: []
   },
   {
-    key: DimensionKeys.Customer,
+    key: TableKeys.Customer,
     name: '物流客户',
     fields: [{name: 'id', type: 'int'},
       {name: 'name', type: 'string', desc: '名称'},
@@ -52,7 +52,7 @@ const Dimensions: DimensionDef[] = [
     data: []
   },
   {
-    key: DimensionKeys.City,
+    key: TableKeys.City,
     name: '城市',
     fields: [{name: 'province', type: 'string', desc: '省份'},
       {name: 'city', type: 'string', desc: '城市'},
@@ -62,7 +62,7 @@ const Dimensions: DimensionDef[] = [
     data: []
   },
   {
-    key: DimensionKeys.Province,
+    key: TableKeys.Province,
     name: '省份',
     fields: [{name: 'province', type: 'string', desc: '省份'},
       {name: 'capital', type: 'string', desc: '省会'},
@@ -72,7 +72,7 @@ const Dimensions: DimensionDef[] = [
     data: []
   },
   {
-    key: DimensionKeys.Category,
+    key: TableKeys.Category,
     name: '商品分类',
     fields: [{name: 'id', type: 'int'},
       {name: 'category', type: 'string', desc: '分类'},
@@ -81,7 +81,7 @@ const Dimensions: DimensionDef[] = [
     data: []
   },
   {
-    key: DimensionKeys.Site,
+    key: TableKeys.Site,
     name: '物流点',
     fields: [{name: 'id', type: 'int'},
       {name: 'name', type: 'string', desc: '名称'},
@@ -90,14 +90,14 @@ const Dimensions: DimensionDef[] = [
     data: []
   },
   {
-    key: DimensionKeys.Invoice,
+    key: TableKeys.Invoice,
     name: '运单',
     fields: [{name: 'id', type: 'int'},
       {name: 'wl_id', type: 'string', desc: '物流公司id'},
       {name: 'fhf_id', type: 'int', desc: '发货方id'},
       {name: 'fhCity', type: 'string', desc: '发货城市'},
       {name: 'fhd_id', type: 'int', desc: '发货点id'},
-      {name: 'fh_date', type: 'string', desc: '发货时间'},
+      {name: 'fhDate', type: 'string', desc: '发货时间'},
       {name: 'yjdhDate', type: 'string', desc: '预计到货时间'},
       {name: 'sjdhDate', type: 'string', desc: '实际到货时间'},
       {name: 'shf_id', type: 'int', desc: '收货方id'},
@@ -117,7 +117,7 @@ const Dimensions: DimensionDef[] = [
   }
 ];
 
-const DimensionMap: Map<string, DimensionDef> = new Map(Dimensions.map(d => [d.key, d]));
+const TableMap: Map<string, TableDef> = new Map(Tables.map(d => [d.key, d]));
 
 
 function loadDataBulk(bulk: string, fields: FieldDef[]): any[] {
@@ -157,4 +157,4 @@ function loadDataRows(rs: string[], fields: FieldDef[]): any[] {
 }
 
 
-export {FieldDef, DimensionDef, DimensionKeys, Dimensions, DimensionMap, loadDataBulk, loadDataRows};
+export {FieldDef, TableDef, TableKeys, Tables, TableMap, loadDataBulk, loadDataRows};
