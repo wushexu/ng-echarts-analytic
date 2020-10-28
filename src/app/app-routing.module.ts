@@ -5,8 +5,9 @@ import {GenericChartComponent} from './charts/generic/generic-chart.component';
 
 
 const routes: Routes = [
-  {path: 'fh', component: FhComponent},
-  {path: 'gc', component: GenericChartComponent}
+  {path: '', component: GenericChartComponent},
+  {path: 'gc', component: GenericChartComponent},
+  {path: 'fh', component: FhComponent}
 ];
 
 @NgModule({

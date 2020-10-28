@@ -51,7 +51,7 @@
             <mat-select [(ngModel)]="fhDateFilter" (selectionChange)="refreshChart()">
               <mat-option value="">（不限）</mat-option>
               <mat-option value="1d">一天</mat-option>
-              <mat-option value="1w">最近一周</mat-option>
+              <mat-option value="1w">一周</mat-option>
             </mat-select>
           </mat-form-field>
         </li>
@@ -100,8 +100,38 @@
               <mat-option value="bar">柱状图</mat-option>
               <mat-option value="line">折线图</mat-option>
               <mat-option value="pie">饼状图</mat-option>
+              <mat-option value="scatter">散点图</mat-option>
+              <mat-option value="effectScatter">散点图（涟漪）</mat-option>
+              <!--<mat-option value="map">地图</mat-option>-->
+              <!--<mat-option value="radar">雷达图</mat-option>
+              <mat-option value="tree">树图</mat-option>
+              <mat-option value="treemap">树图（面积）</mat-option>
+              <mat-option value="sunburst">旭日图</mat-option>
+              <mat-option value="boxplot">盒状图</mat-option>
+              <mat-option value="candlestick">K线图</mat-option>
+              <mat-option value="heatmap">热力图</mat-option>
+              <mat-option value="parallel">平行坐标系</mat-option>
+              <mat-option value="lines">路径图</mat-option>
+              <mat-option value="graph">关系图</mat-option>
+              <mat-option value="gauge">仪表盘</mat-option>-->
             </mat-select>
           </mat-form-field>
+        </li>
+        <li>
+          <mat-form-field>
+            <input matInput placeholder="宽" [(ngModel)]="chartWidth" type="number" step="50" (change)="refreshChart()">
+          </mat-form-field>
+        </li>
+        <li>
+          <mat-form-field>
+            <input matInput placeholder="高" [(ngModel)]="chartHeight" type="number" step="50" (change)="refreshChart()">
+          </mat-form-field>
+        </li>
+        <li>
+          颜色&nbsp;
+          <button mat-raised-button (click)="colorRollBackward()">&lt;&lt;</button>
+          &nbsp;&nbsp;
+          <button mat-raised-button (click)="colorRollForward()">&gt;&gt;</button>
         </li>
       </ul>
     </div>
@@ -109,5 +139,5 @@
 </mat-card>
 
 <div class="main-content">
-  <div style="width: 1200px;height:400px;" #chart></div>
+  <div [style.width.px]="chartWidth" [style.height.px]="chartHeight" #chart></div>
 </div>

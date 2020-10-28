@@ -39,6 +39,8 @@ export class GenericChartComponent implements OnInit, AfterViewInit {
   chartType = 'bar';
   chartWidth = 1200;
   chartHeight = 400;
+  chartColors = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'];
+
   selectedDim = 'cat';
   selectedDim2 = '';
   selectedMeasure = 'zj';
@@ -89,6 +91,20 @@ export class GenericChartComponent implements OnInit, AfterViewInit {
     this.refreshChart();
   }
 
+  colorRollForward(): void {
+    let colors = this.chartColors;
+    let c = colors.shift();
+    colors.push(c);
+    this.refreshChart();
+  }
+
+  colorRollBackward(): void {
+    let colors = this.chartColors;
+    let c = colors.pop();
+    colors.unshift(c);
+    this.refreshChart();
+  }
+
   refreshChart(): void {
     if (!this.chartDiv) {
       return;
@@ -106,14 +122,12 @@ export class GenericChartComponent implements OnInit, AfterViewInit {
     let measures = [this.selectedMeasure];
 
     if (this.myChart) {
-      this.myChart.clear();
+      // this.myChart.clear();
+      this.myChart.dispose();
     }
 
     const holder: HTMLDivElement = this.chartDiv.nativeElement as HTMLDivElement;
     this.myChart = echarts.init(holder);
-
-    console.log('dims: ' + dims);
-    console.log('measures: ' + measures);
 
     let slice: any = {};
     if (this.fhDateFilter) {
@@ -147,6 +161,7 @@ export class GenericChartComponent implements OnInit, AfterViewInit {
     }
 
     const option: EChartOption = {
+      color: this.chartColors,
       legend: {},
       tooltip: {},
       dataset,

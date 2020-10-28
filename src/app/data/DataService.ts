@@ -20,7 +20,6 @@ export class DataService {
   provOptions0: Option[];
 
   constructor() {
-    console.log('setup data ...');
     loadData();
 
     // const invDim = TableMap.get(TableKeys.Invoice);
