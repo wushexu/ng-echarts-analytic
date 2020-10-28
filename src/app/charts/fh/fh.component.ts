@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 
 import * as echarts from 'echarts';
 
@@ -11,14 +11,15 @@ import {EChartOption} from 'echarts';
   templateUrl: './fh.component.html',
   styleUrls: ['./fh.component.css']
 })
-export class FhComponent implements OnInit {
+export class FhComponent implements AfterViewInit {
+  @ViewChild('chart') chartDiv: ElementRef;
 
   constructor(private dataService: DataService) {
   }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
 
-    const holder: HTMLDivElement = document.getElementById('main') as HTMLDivElement;
+    const holder: HTMLDivElement = this.chartDiv.nativeElement as HTMLDivElement;
     const myChart: echarts.ECharts = echarts.init(holder);
 
     let dataset = query({dims: ['发货省份'], measures: ['总价', '运费'], slice: {发货时间: '2020/9/16'}});

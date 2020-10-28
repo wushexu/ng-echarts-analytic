@@ -2,7 +2,7 @@ import alasql from 'alasql';
 import {FieldDef, TableKeys, TableDef, Tables, TableMap} from './schema';
 import {CubeDimension, Cube, cubes} from './cube';
 
-export function setupCube(): void {
+function setupCube(): void {
 
   for (let dim of Tables) {
     let {fields, table, data} = dim;
@@ -14,13 +14,13 @@ export function setupCube(): void {
 
 }
 
-export interface Dataset {
+interface Dataset {
   dimensions: any[];
   source: any[];
 }
 
 
-export function query(options?: { dims: string[], cubeName?: string, measures?: string[], slice?: any }): Dataset {
+function query(options?: { dims: string[], cubeName?: string, measures?: string[], slice?: any }): Dataset {
 
 
   let {dims, cubeName, measures, slice} = options;
@@ -40,7 +40,7 @@ export function query(options?: { dims: string[], cubeName?: string, measures?: 
     let field = cubeDimension.field;
     // {name: 'fhsf', displayName: '省份', type: 'ordinal'}
     let type = field.type === 'string' ? 'ordinal' : field.type;
-    dimensionAndMeasures.push({name: cubeDimension.name, displayName: cubeDimension.name, type});
+    dimensionAndMeasures.push({name: cubeDimension.name, displayName: cubeDimension.desc, type});
     return cubeDimension;
   });
 
@@ -61,7 +61,7 @@ export function query(options?: { dims: string[], cubeName?: string, measures?: 
   let measureClause = measureFields.map(measureField => {
     let measure = measureField.name;
     if (measure === 'count') {
-      return `count(1) as count`;
+      return `count(1) as [count]`;
     }
     return `sum(${measure}) as ${measure}`;
   }).join(',');
@@ -112,3 +112,5 @@ export function query(options?: { dims: string[], cubeName?: string, measures?: 
 // }
   return {dimensions: dimensionAndMeasures, source: data};
 }
+
+export {setupCube,query,CubeDimension, Cube, cubes};

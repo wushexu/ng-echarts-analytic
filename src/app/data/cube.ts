@@ -44,7 +44,8 @@ class Cube {
     {name: 'quantity', type: 'int', desc: '数量'},
     {name: 'weight', type: 'int', desc: '重量'},
     {name: 'zj', type: 'int', desc: '总价'},
-    {name: 'yf', type: 'int', desc: '运费'}];// agg: sum
+    {name: 'yf', type: 'int', desc: '运费'},
+    {name: 'count', type: 'int', desc: '条数'}];// agg: sum
   defaultMeasure? = 'zj';
   dimensions: CubeDimension[] = [
     invoiceDims.fhCity, // 发货城市

@@ -1,0 +1,21 @@
+ul {
+  list-style-type: none;
+  padding-left: 2em;
+}
+
+.config-card {
+  clear: both;
+}
+
+.config-column {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.config-column:not(:first-child) {
+  margin-left: 2em;
+}
+
+.title {
+  color: #3f51b5
+}

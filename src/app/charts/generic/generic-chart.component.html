@@ -1,0 +1,32 @@
+<mat-card>
+  <mat-card-content>
+    <div class="config-column">
+      <div class="title">维度</div>
+      <ul>
+        <li *ngFor="let option of dimOptions">
+          <mat-checkbox [(ngModel)]="option.selected"
+                        color="primary"
+                        (ngModelChange)="refreshChart()">
+            {{option.label}}
+          </mat-checkbox>
+        </li>
+      </ul>
+    </div>
+    <div class="config-column">
+      <div class="title">指标</div>
+      <ul>
+        <li *ngFor="let option of measureOptions">
+          <mat-checkbox [(ngModel)]="option.selected"
+                        color="accent"
+                        (ngModelChange)="refreshChart()">
+            {{option.label}}
+          </mat-checkbox>
+        </li>
+      </ul>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<div class="main-content">
+  <div style="width: 1200px;height:400px;" #chart></div>
+</div>
