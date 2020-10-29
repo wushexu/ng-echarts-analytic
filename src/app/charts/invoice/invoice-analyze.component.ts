@@ -1,46 +1,21 @@
 import {Component, OnInit, AfterViewInit, ViewChild, ElementRef} from '@angular/core';
-import {MatRadioChange} from '@angular/material/radio';
 
 import * as echarts from 'echarts';
 
 import {DataService, Option} from '../../data/DataService';
-import {FieldDef} from '../../data/schema';
 import {query, CubeDimension, Cube, cubes} from '../../data/olap';
 import {EChartOption} from 'echarts';
-
-interface DimOption {
-  name: string;
-  label: string;
-  // selected?: boolean;
-  dimension: CubeDimension;
-}
-
-interface MeasureOption {
-  name: string;
-  label: string;
-  // selected?: boolean;
-  field: FieldDef;
-}
+import {GenericChartComponent, DimOption, MeasureOption} from '../common/generic-chart.component';
 
 @Component({
-  selector: 'app-generic-chart',
-  templateUrl: './generic-chart.component.html',
-  styleUrls: ['./generic-chart.component.css']
+  selector: 'app-invoice-analyze',
+  templateUrl: './invoice-analyze.component.html',
+  styleUrls: ['./invoice-analyze.component.css']
 })
-export class GenericChartComponent implements OnInit, AfterViewInit {
+export class InvoiceAnalyzeComponent extends GenericChartComponent implements OnInit, AfterViewInit {
   @ViewChild('chart') chartDiv: ElementRef;
 
   cube: Cube = cubes.simple;
-  dimOptions: DimOption[] = [];
-  dim2Options: DimOption[] = [];
-  measureOptions: MeasureOption[] = [];
-  catOptions: Option[];
-  provOptions: Option[];
-
-  chartType = 'bar';
-  chartWidth = 1200;
-  chartHeight = 400;
-  chartColors = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'];
 
   selectedDim = 'cat';
   selectedDim2 = '';
@@ -51,10 +26,9 @@ export class GenericChartComponent implements OnInit, AfterViewInit {
   fhsfFilter = '';
   shsfFilter = '';
 
-  myChart: echarts.ECharts;
-  currentDataset: [];
 
-  constructor(private dataService: DataService) {
+  constructor(protected dataService: DataService) {
+    super(dataService);
   }
 
   ngOnInit(): void {
@@ -75,48 +49,6 @@ export class GenericChartComponent implements OnInit, AfterViewInit {
 
     this.catOptions = this.dataService.catOptions;
     this.provOptions = this.dataService.provOptions;
-  }
-
-  ngAfterViewInit(): void {
-
-    this.refreshChart();
-  }
-
-  dimSelected($event: MatRadioChange): void {
-    this.selectedDim = $event.value;
-    this.refreshChart();
-  }
-
-  dimSelected2($event: MatRadioChange): void {
-    this.selectedDim2 = $event.value;
-    this.refreshChart();
-  }
-
-  measureSelected($event: MatRadioChange): void {
-    this.selectedMeasure = $event.value;
-    this.refreshChart();
-  }
-
-  colorRollForward(): void {
-    let colors = this.chartColors;
-    let c = colors.shift();
-    colors.push(c);
-    this.refreshChart(true);
-  }
-
-  colorRollBackward(): void {
-    let colors = this.chartColors;
-    let c = colors.pop();
-    colors.unshift(c);
-    this.refreshChart(true);
-  }
-
-  resized(): void {
-    this.refreshChart(true);
-  }
-
-  chartTypeChanged(): void {
-    this.refreshChart(true);
   }
 
 

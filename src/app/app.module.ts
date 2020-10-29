@@ -36,14 +36,16 @@ import {FhComponent} from './charts/fh/fh.component';
 import {AppComponent} from './app.component';
 import {SidebarComponent} from './sidebar/sidebar.component';
 import {DataService} from './data/DataService';
-import {GenericChartComponent} from './charts/generic/generic-chart.component';
+import {InvoiceAnalyzeComponent} from './charts/invoice/invoice-analyze.component';
+import {BlankComponent} from './sidebar/blank.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     SidebarComponent,
+    BlankComponent,
     FhComponent,
-    GenericChartComponent
+    InvoiceAnalyzeComponent
   ],
   imports: [
     BrowserModule,
