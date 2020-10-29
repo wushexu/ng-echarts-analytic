@@ -27,7 +27,7 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
 
   let {dims, cubeName, measures, slice} = options;
 
-  let cube: Cube = cubes[cubeName || 'simple'];
+  let cube: Cube = cubes[cubeName];
   if (!cube) {
     throw new Error(`Cube ${cubeName} Not Exists.`);
   }
@@ -113,10 +113,10 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
   }
   sql = sql + ' group by ' + groupByClause;
   sql = sql + ' order by ' + dimFieldNames[0];
-  // console.log('Query: ' + sql);
+  console.log('Query: ' + sql);
 
   let data = alasql(sql);
-  // console.log(data);
+  console.log(data);
 
   if (cubeDimensions.length > 1 && measureFields.length === 1) {
     let dimField = cubeDimensions[0].field.name;
@@ -151,7 +151,7 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
     for (let dim2Val of dim2Values) {
       chartDimensions.push({name: dim2Val, displayName: dim2Val, type: 'ordinal'});
     }
-    // console.log(data);
+    console.log(data);
   } else {
     measureFields.forEach(measure => {
       chartDimensions.push({name: measure.name, displayName: measure.desc, type: measure.type});
@@ -161,4 +161,4 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
   return {dimensions: chartDimensions, source: data};
 }
 
-export {setupCube, query, CubeDimension, Measure, Cube, cubes};
+export {setupCube, query, CubeDimension, Measure, Cube, cubes, Dataset};

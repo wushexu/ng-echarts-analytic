@@ -5,7 +5,6 @@ import alasql from 'alasql';
 import {FieldDef, TableKeys, TableDef, Tables, TableMap} from './schema';
 
 import {loadData} from './data-loader';
-import {CubeDimension, Cube, cubes, cubeNames} from './cube';
 import {setupCube, query} from './olap';
 
 export interface Option {
@@ -37,10 +36,6 @@ export class DataService {
 
     // let res = alasql('SELECT top 5 * FROM province');
     // console.log(res);
-
-    // console.log('--------------');
-    // let data = query(cubeNames.simple, ['fhsf']);
-    // console.log(data.length);
   }
 
   get catOptions(): Option[] {

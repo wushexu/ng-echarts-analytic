@@ -38,6 +38,7 @@ import {SidebarComponent} from './sidebar/sidebar.component';
 import {DataService} from './data/DataService';
 import {InvoiceAnalyzeComponent} from './charts/invoice/invoice-analyze.component';
 import {BlankComponent} from './sidebar/blank.component';
+import {LogisSiteComponent} from './charts/logis-site/logis-site.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import {BlankComponent} from './sidebar/blank.component';
     SidebarComponent,
     BlankComponent,
     FhComponent,
-    InvoiceAnalyzeComponent
+    InvoiceAnalyzeComponent,
+    LogisSiteComponent
   ],
   imports: [
     BrowserModule,

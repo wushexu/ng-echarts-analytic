@@ -57,28 +57,6 @@
         </li>
         <li>
           <mat-form-field>
-            <mat-label>发货省份</mat-label>
-            <mat-select [(ngModel)]="fhsfFilter" (selectionChange)="refreshChart()" panelClass="province-select-panel">
-              <mat-option value="">（不限）</mat-option>
-              <mat-option *ngFor="let opt of provOptions" [value]="opt.value">
-                {{opt.label}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </li>
-        <li>
-          <mat-form-field>
-            <mat-label>收货省份</mat-label>
-            <mat-select [(ngModel)]="shsfFilter" (selectionChange)="refreshChart()" panelClass="province-select-panel">
-              <mat-option value="">（不限）</mat-option>
-              <mat-option *ngFor="let opt of provOptions" [value]="opt.value">
-                {{opt.label}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </li>
-        <li>
-          <mat-form-field>
             <mat-label>商品分类</mat-label>
             <mat-select [(ngModel)]="catFilter" (selectionChange)="refreshChart()">
               <mat-option value="">（不限）</mat-option>

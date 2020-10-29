@@ -2,11 +2,11 @@ import {Component, OnInit, AfterViewInit, ViewChild, ElementRef} from '@angular/
 import {MatRadioChange} from '@angular/material/radio';
 
 import * as echarts from 'echarts';
+import {EChartOption} from 'echarts';
 
 import {DataService, Option} from '../../data/DataService';
 import {FieldDef} from '../../data/schema';
-import {query, CubeDimension, Cube, cubes} from '../../data/olap';
-import {EChartOption} from 'echarts';
+import {CubeDimension, Cube, Dataset} from '../../data/olap';
 
 export interface DimOption {
   name: string;
@@ -38,9 +38,9 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
   chartHeight = 400;
   chartColors = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'];
 
-  selectedDim = 'cat';
+  selectedDim = '';
   selectedDim2 = '';
-  selectedMeasure = 'zj';
+  selectedMeasure = '';
 
   fhDateFilter: '' | '1d' | '1w' = '1d';
   catFilter = '';
@@ -48,7 +48,7 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
   shsfFilter = '';
 
   myChart: echarts.ECharts;
-  currentDataset: [];
+  currentDataset: Dataset;
 
   constructor(protected dataService: DataService) {
   }
@@ -115,6 +115,7 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
     this.refreshChart(true);
   }
 
+  abstract buildDataset(dims): Dataset;
 
   refreshChart(keepData: boolean = false): void {
     if (!this.chartDiv) {
@@ -143,29 +144,9 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
     if (keepData && this.currentDataset) {
       dataset = this.currentDataset;
     } else {
-      let slice: any = {};
-      if (this.fhDateFilter) {
-        if (this.fhDateFilter === '1d') {
-          slice['发货日期'] = '2020/9/16';
-        } else if (this.fhDateFilter === '1w') {
-          slice['发货日期'] = {op: 'gt', val: '2020/9/13'};
-        }
-      }
-      if (this.catFilter) {
-        slice['cat'] = this.catFilter;
-      }
-      if (this.fhsfFilter) {
-        slice['发货省份'] = this.fhsfFilter;
-      }
-      if (this.shsfFilter) {
-        slice['收货省份'] = this.shsfFilter;
-      }
-
-      let measures = [this.selectedMeasure];
-      dataset = query({dims, measures, slice});
       // console.log(dataset.source.length);
       // console.log('result dimensions: ' + JSON.stringify(dataset.dimensions, null, 2));
-
+      dataset = this.buildDataset(dims);
       this.currentDataset = dataset;
     }
 

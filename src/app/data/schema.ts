@@ -85,7 +85,9 @@ const Tables: TableDef[] = [
     name: '物流点',
     fields: [{name: 'id', type: 'int'},
       {name: 'name', type: 'string', desc: '名称'},
-      {name: 'type', type: 'string', desc: '类型'}],
+      {name: 'type', type: 'string', desc: '类型'},
+      {name: 'district', type: 'string', desc: '县区'}
+    ],
     table: 'site',
     data: []
   },
@@ -93,7 +95,7 @@ const Tables: TableDef[] = [
     key: TableKeys.Invoice,
     name: '运单',
     fields: [{name: 'id', type: 'int'},
-      {name: 'wl_id', type: 'string', desc: '物流公司id'},
+      {name: 'wl_id', type: 'int', desc: '物流公司id'},
       {name: 'fhf_id', type: 'int', desc: '发货方id'},
       {name: 'fhCity', type: 'string', desc: '发货城市'},
       {name: 'fhd_id', type: 'int', desc: '发货点id'},
@@ -111,7 +113,12 @@ const Tables: TableDef[] = [
       {name: 'yf', type: 'int', desc: '运费'},
       {name: 'fhsf', type: 'string', desc: '发货省份'},
       {name: 'shsf', type: 'string', desc: '收货省份'},
-      {name: 'cat', type: 'string', desc: '商品分类'}],
+      {name: 'cat', type: 'string', desc: '商品分类'},
+      {name: 'wlComp', type: 'string', desc: '物流公司'},
+      {name: 'vehicleType', type: 'string', desc: '车型'},
+      {name: 'site', type: 'string', desc: '物流园区'},
+      {name: 'siteDistrict', type: 'string', desc: '县区'}
+    ],
     table: 'invoice',
     data: []
   }

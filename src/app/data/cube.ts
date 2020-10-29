@@ -14,57 +14,22 @@ interface Measure extends FieldDef {
   aggSql?: string;
 }
 
-//   {name: 'wl_id', type: 'string', desc: '物流公司id'},
-//   {name: 'fhf_id', type: 'int', desc: '发货方id'},
-//   {name: 'fhd_id', type: 'int', desc: '发货点id'},
-//   {name: 'shf_id', type: 'int', desc: '收货方id'},
-//   {name: 'cl_id', type: 'int', desc: '车辆id'},
-//   {name: 'shd_id', type: 'int', desc: '收货点id'},
-//   {name: 'cat_id', type: 'int', desc: '商品分类id'},
-
-//   {name: 'fhCity', type: 'string', desc: '发货城市'},
-//   {name: 'fhDate', type: 'string', desc: '发货日期'},
-//   {name: 'yjdhDate', type: 'string', desc: '预计到货日期'},
-//   {name: 'sjdhDate', type: 'string', desc: '实际到货日期'},
-//   {name: 'shCity', type: 'string', desc: '收货城市'},
-//   {name: 'fhsf', type: 'string', desc: '发货省份'},
-//   {name: 'shsf', type: 'string', desc: '收货省份'},
-//   {name: 'cat', type: 'string', desc: '商品分类'}];
-
-let invoiceDims: { [name: string]: CubeDimension } = {};
-TableMap.get(TableKeys.Invoice).fields.forEach(field => {
-  invoiceDims[field.name] = {
-    name: field.name,
-    desc: field.desc || field.name,
-    field,
-    type: 'regression'
-  };
-});
-
 class Cube {
+  name: string;
   factTable: TableDef = TableMap.get(TableKeys.Invoice);
-  measures: Measure[] = [
-    {name: 'quantity', type: 'int', desc: '数量'},
-    {name: 'weight', type: 'int', desc: '重量'},
-    {name: 'zj', type: 'int', desc: '总价'},
-    {name: 'yf', type: 'int', desc: '运费'},
-    {name: 'count', type: 'int', desc: '条数', aggSql: 'count(1) as [count]'}];
-  defaultMeasure? = 'zj';
-  dimensions: CubeDimension[] = [
-    invoiceDims.fhCity, // 发货城市
-    invoiceDims.fhsf, // 发货省份
-    invoiceDims.fhDate, // 发货日期
-    invoiceDims.shCity, // 收货城市
-    invoiceDims.shsf, // 收货省份
-    invoiceDims.yjdhDate, // 预计到货日期
-    invoiceDims.sjdhDate, // 实际到货日期
-    invoiceDims.cat // 商品分类
-  ];
+  dimensions: CubeDimension[];
+  measures: Measure[];
+  defaultMeasure?;
 
   dimensionMap: Map<string, CubeDimension>;
   measureMap: Map<string, Measure>;
 
-  constructor() {
+  constructor(name: string, dimensions: CubeDimension[], measures: Measure[], defaultMeasure?: string) {
+    this.name = name;
+    this.dimensions = dimensions;
+    this.measures = measures;
+    this.defaultMeasure = defaultMeasure;
+
     this.dimensionMap = new Map();
     this.dimensions.forEach(dim => {
       this.dimensionMap.set(dim.name, dim);
@@ -87,10 +52,54 @@ class Cube {
   }
 }
 
-const simpleCube: Cube = new Cube();
 
-const cubeNames = {simple: 'simple'};
+let invoiceDims: { [name: string]: CubeDimension } = {};
+TableMap.get(TableKeys.Invoice).fields.forEach(field => {
+  invoiceDims[field.name] = {
+    name: field.name,
+    desc: field.desc || field.name,
+    field,
+    type: 'regression'
+  };
+});
 
-const cubes = {simple: simpleCube};
+const invoiceCube: Cube = new Cube(
+  'invoice',
+  [
+    invoiceDims.fhCity, // 发货城市
+    invoiceDims.fhsf, // 发货省份
+    invoiceDims.fhDate, // 发货日期
+    invoiceDims.shCity, // 收货城市
+    invoiceDims.shsf, // 收货省份
+    invoiceDims.yjdhDate, // 预计到货日期
+    invoiceDims.sjdhDate, // 实际到货日期
+    invoiceDims.cat // 商品分类
+  ],
+  [
+    {name: 'quantity', type: 'int', desc: '数量'},
+    {name: 'weight', type: 'int', desc: '重量'},
+    {name: 'zj', type: 'int', desc: '总价'},
+    {name: 'yf', type: 'int', desc: '运费'},
+    {name: 'count', type: 'int', desc: '条数', aggSql: 'count(1) as [count]'}],
+  'zj');
 
-export {CubeDimension, Measure, Cube, cubes, cubeNames};
+const siteCube: Cube = new Cube(
+  'site',
+  [
+    Object.assign({}, invoiceDims.fhDate, {desc: '日期'}), // 日期
+    invoiceDims.cat, // 商品分类
+    invoiceDims.wlComp, // 物流公司
+    invoiceDims.vehicleType, // 车型
+    invoiceDims.site, // 物流园
+    invoiceDims.siteDistrict  // 县区
+  ],
+  [
+    {name: 'weight', type: 'int', desc: '商品重量'},
+    {name: 'zj', type: 'int', desc: '商品总价'},
+    {name: 'count', type: 'int', desc: '车辆数', aggSql: 'count(1) as [count]'}],
+  'count');
+
+
+const cubes = {[invoiceCube.name]: invoiceCube, [siteCube.name]: siteCube};
+
+export {CubeDimension, Measure, Cube, cubes};

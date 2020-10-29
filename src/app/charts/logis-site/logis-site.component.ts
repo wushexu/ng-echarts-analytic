@@ -5,19 +5,17 @@ import {query, CubeDimension, Cube, cubes, Dataset} from '../../data/olap';
 import {GenericChartComponent, DimOption, MeasureOption} from '../common/generic-chart.component';
 
 @Component({
-  selector: 'app-invoice-analyze',
-  templateUrl: './invoice-analyze.component.html',
-  styleUrls: ['./invoice-analyze.component.css']
+  selector: 'app-logis-site',
+  templateUrl: './logis-site.component.html',
+  styleUrls: ['./logis-site.component.css']
 })
-export class InvoiceAnalyzeComponent extends GenericChartComponent implements OnInit, AfterViewInit {
+export class LogisSiteComponent extends GenericChartComponent implements OnInit, AfterViewInit {
   @ViewChild('chart') chartDiv: ElementRef;
 
-  cube: Cube = cubes.invoice;
+  cube: Cube = cubes.site;
 
-  selectedDim = 'cat';
-  selectedMeasure = 'zj';
-
-  fhDateFilter: '' | '1d' | '1w' = '1d';
+  selectedDim = 'site';
+  selectedMeasure = 'count';
 
 
   constructor(protected dataService: DataService) {
@@ -30,7 +28,7 @@ export class InvoiceAnalyzeComponent extends GenericChartComponent implements On
     this.cube.dimensions.forEach(dim => {
       let option: DimOption = {name: dim.name, label: dim.desc, dimension: dim};
       this.dimOptions.push(option);
-      if (dim.name !== 'fhCity' && dim.name !== 'shCity') {
+      if (dim.name !== 'siteDistrict') {
         this.dim2Options.push(option);
       }
     });
@@ -48,19 +46,13 @@ export class InvoiceAnalyzeComponent extends GenericChartComponent implements On
     let slice: any = {};
     if (this.fhDateFilter) {
       if (this.fhDateFilter === '1d') {
-        slice['发货日期'] = '2020/9/16';
+        slice['日期'] = '2020/9/16';
       } else if (this.fhDateFilter === '1w') {
-        slice['发货日期'] = {op: 'gt', val: '2020/9/13'};
+        slice['日期'] = {op: 'gt', val: '2020/9/13'};
       }
     }
     if (this.catFilter) {
       slice['cat'] = this.catFilter;
-    }
-    if (this.fhsfFilter) {
-      slice['发货省份'] = this.fhsfFilter;
-    }
-    if (this.shsfFilter) {
-      slice['收货省份'] = this.shsfFilter;
     }
 
     let measures = [this.selectedMeasure];
