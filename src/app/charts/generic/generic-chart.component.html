@@ -30,7 +30,7 @@
       <div class="title">维度2</div>
       <mat-radio-group [(ngModel)]="selectedDim2" (change)="dimSelected2($event)">
         <ul class="radio-options">
-          <li *ngFor="let option of dimOptions">
+          <li *ngFor="let option of dim2Options">
             <!--<mat-checkbox [(ngModel)]="option.selected" color="primary" (ngModelChange)="refreshChart()">
               {{option.label}}
             </mat-checkbox>-->
@@ -96,7 +96,7 @@
         <li>
           <mat-form-field>
             <mat-label>类型</mat-label>
-            <mat-select [(ngModel)]="chartType" (selectionChange)="refreshChart()">
+            <mat-select [(ngModel)]="chartType" (selectionChange)="chartTypeChanged()">
               <mat-option value="bar">柱状图</mat-option>
               <mat-option value="line">折线图</mat-option>
               <mat-option value="pie">饼状图</mat-option>
@@ -119,18 +119,18 @@
         </li>
         <li>
           <mat-form-field>
-            <input matInput placeholder="宽" [(ngModel)]="chartWidth" type="number" step="50" (change)="refreshChart()">
+            <input matInput placeholder="宽" [(ngModel)]="chartWidth" type="number" step="50" (change)="resized()">
           </mat-form-field>
         </li>
         <li>
           <mat-form-field>
-            <input matInput placeholder="高" [(ngModel)]="chartHeight" type="number" step="50" (change)="refreshChart()">
+            <input matInput placeholder="高" [(ngModel)]="chartHeight" type="number" step="50" (change)="resized()">
           </mat-form-field>
         </li>
         <li>
-          颜色&nbsp;
+          颜色&nbsp;&nbsp;
           <button mat-raised-button (click)="colorRollBackward()">&lt;&lt;</button>
-          &nbsp;&nbsp;
+          &nbsp;
           <button mat-raised-button (click)="colorRollForward()">&gt;&gt;</button>
         </li>
       </ul>

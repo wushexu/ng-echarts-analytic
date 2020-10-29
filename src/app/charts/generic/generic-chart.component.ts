@@ -32,6 +32,7 @@ export class GenericChartComponent implements OnInit, AfterViewInit {
 
   cube: Cube = cubes.simple;
   dimOptions: DimOption[] = [];
+  dim2Options: DimOption[] = [];
   measureOptions: MeasureOption[] = [];
   catOptions: Option[];
   provOptions: Option[];
@@ -51,15 +52,20 @@ export class GenericChartComponent implements OnInit, AfterViewInit {
   shsfFilter = '';
 
   myChart: echarts.ECharts;
+  currentDataset: [];
 
   constructor(private dataService: DataService) {
   }
 
   ngOnInit(): void {
     this.dimOptions = [];
+    this.dim2Options = [];
     this.cube.dimensions.forEach(dim => {
       let option: DimOption = {name: dim.name, label: dim.desc, dimension: dim};
       this.dimOptions.push(option);
+      if (dim.name !== 'fhCity' && dim.name !== 'shCity') {
+        this.dim2Options.push(option);
+      }
     });
 
     this.measureOptions = [];
@@ -95,17 +101,26 @@ export class GenericChartComponent implements OnInit, AfterViewInit {
     let colors = this.chartColors;
     let c = colors.shift();
     colors.push(c);
-    this.refreshChart();
+    this.refreshChart(true);
   }
 
   colorRollBackward(): void {
     let colors = this.chartColors;
     let c = colors.pop();
     colors.unshift(c);
-    this.refreshChart();
+    this.refreshChart(true);
   }
 
-  refreshChart(): void {
+  resized(): void {
+    this.refreshChart(true);
+  }
+
+  chartTypeChanged(): void {
+    this.refreshChart(true);
+  }
+
+
+  refreshChart(keepData: boolean = false): void {
     if (!this.chartDiv) {
       return;
     }
@@ -119,7 +134,6 @@ export class GenericChartComponent implements OnInit, AfterViewInit {
     if (this.selectedDim2 && this.selectedDim2 !== this.selectedDim) {
       dims.push(this.selectedDim2);
     }
-    let measures = [this.selectedMeasure];
 
     if (this.myChart) {
       // this.myChart.clear();
@@ -129,27 +143,35 @@ export class GenericChartComponent implements OnInit, AfterViewInit {
     const holder: HTMLDivElement = this.chartDiv.nativeElement as HTMLDivElement;
     this.myChart = echarts.init(holder);
 
-    let slice: any = {};
-    if (this.fhDateFilter) {
-      if (this.fhDateFilter === '1d') {
-        slice['发货日期'] = '2020/9/16';
-      } else if (this.fhDateFilter === '1w') {
-        slice['发货日期'] = {op: 'gt', val: '2020/9/13'};
+    let dataset;
+    if (keepData && this.currentDataset) {
+      dataset = this.currentDataset;
+    } else {
+      let slice: any = {};
+      if (this.fhDateFilter) {
+        if (this.fhDateFilter === '1d') {
+          slice['发货日期'] = '2020/9/16';
+        } else if (this.fhDateFilter === '1w') {
+          slice['发货日期'] = {op: 'gt', val: '2020/9/13'};
+        }
       }
-    }
-    if (this.catFilter) {
-      slice['cat'] = this.catFilter;
-    }
-    if (this.fhsfFilter) {
-      slice['发货省份'] = this.fhsfFilter;
-    }
-    if (this.shsfFilter) {
-      slice['收货省份'] = this.shsfFilter;
-    }
+      if (this.catFilter) {
+        slice['cat'] = this.catFilter;
+      }
+      if (this.fhsfFilter) {
+        slice['发货省份'] = this.fhsfFilter;
+      }
+      if (this.shsfFilter) {
+        slice['收货省份'] = this.shsfFilter;
+      }
 
-    let dataset = query({dims, measures, slice});
-    // console.log(dataset.source.length);
-    // console.log('result dimensions: ' + JSON.stringify(dataset.dimensions, null, 2));
+      let measures = [this.selectedMeasure];
+      dataset = query({dims, measures, slice});
+      // console.log(dataset.source.length);
+      // console.log('result dimensions: ' + JSON.stringify(dataset.dimensions, null, 2));
+
+      this.currentDataset = dataset;
+    }
 
     let series = [];
     if (dims.length > 1) {
@@ -163,7 +185,18 @@ export class GenericChartComponent implements OnInit, AfterViewInit {
     const option: EChartOption = {
       color: this.chartColors,
       legend: {},
-      tooltip: {},
+      tooltip: {
+        trigger: 'axis'
+      },
+      toolbox: {
+        show: true,
+        feature: {
+          // dataView: {show: true, readOnly: false},
+          // magicType: {show: true, type: ['line', 'bar']},
+          // restore: {show: true},
+          saveAsImage: {show: true}
+        }
+      },
       dataset,
       xAxis: {type: 'category'},
       yAxis: {},
