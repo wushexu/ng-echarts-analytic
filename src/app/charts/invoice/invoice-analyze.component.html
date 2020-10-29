@@ -42,7 +42,7 @@
         </ul>
       </mat-radio-group>
     </div>
-    <div class="config-column filters">
+    <div class="config-column">
       <div class="title">筛选</div>
       <ul>
         <li>
@@ -90,7 +90,7 @@
         </li>
       </ul>
     </div>
-    <div class="config-column filters">
+    <div class="config-column">
       <div class="title">图表</div>
       <ul>
         <li>
@@ -116,6 +116,9 @@
               <mat-option value="gauge">仪表盘</mat-option>-->
             </mat-select>
           </mat-form-field>
+        </li>
+        <li class="slide-toggle">
+          <mat-slide-toggle [(ngModel)]="transpose" color="primary" labelPosition="before" (change)="transposeToggle()">旋转</mat-slide-toggle>
         </li>
         <li>
           <mat-form-field class="inline-number-input">

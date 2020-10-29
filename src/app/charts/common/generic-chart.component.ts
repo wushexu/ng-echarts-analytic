@@ -36,6 +36,7 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
   chartType = 'bar';
   chartWidth = 1200;
   chartHeight = 400;
+  transpose = false;
   chartColors = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'];
 
   selectedDim = '';
@@ -115,6 +116,10 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
     this.refreshChart(true);
   }
 
+  transposeToggle(): void {
+    this.refreshChart(true);
+  }
+
   abstract buildDataset(dims): Dataset;
 
   refreshChart(keepData: boolean = false): void {
@@ -152,12 +157,23 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
 
     let series = [];
     if (dims.length > 1) {
-      for (let di = 0; di < dataset.dimensions.length - 1; di++) {
-        series.push({type: this.chartType});
+      for (let di = 1; di < dataset.dimensions.length; di++) {
+        let serie: any = {type: this.chartType};
+        if (this.transpose) {
+          serie.encode = {x: di, y: 0};
+        }
+        series.push(serie);
       }
     } else {
-      series.push({type: this.chartType});
+      let serie: any = {type: this.chartType};
+      if (this.transpose) {
+        serie.encode = {x: 1, y: 0};
+      }
+      series.push(serie);
     }
+
+    let xAxis: EChartOption.XAxis = this.transpose ? {} : {type: 'category'};
+    let yAxis: EChartOption.YAxis = this.transpose ? {type: 'category'} : {};
 
     const option: EChartOption = {
       color: this.chartColors,
@@ -175,8 +191,8 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
         }
       },
       dataset,
-      xAxis: {type: 'category'},
-      yAxis: {},
+      xAxis,
+      yAxis,
       series
     };
 

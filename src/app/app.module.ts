@@ -18,6 +18,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 // import {MatAutocompleteModule} from '@angular/material/autocomplete';
 // import {MatTooltipModule} from '@angular/material/tooltip';
@@ -68,7 +69,8 @@ import {LogisSiteComponent} from './charts/logis-site/logis-site.component';
     MatCheckboxModule,
     MatRadioModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    MatSlideToggleModule
   ],
   providers: [
     DataService
