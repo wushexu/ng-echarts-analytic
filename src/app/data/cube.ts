@@ -1,4 +1,4 @@
-import {FieldDef, TableKeys, TableDef, Tables, TableMap} from './schema';
+import {FieldDef, TableKeys, TableDef, TableMap} from './schema';
 
 
 interface CubeDimension {

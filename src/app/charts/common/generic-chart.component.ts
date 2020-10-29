@@ -152,7 +152,7 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
 
     let series = [];
     if (dims.length > 1) {
-      for (let di = 0; di < dataset.dimensions.length - 2; di++) {
+      for (let di = 0; di < dataset.dimensions.length - 1; di++) {
         series.push({type: this.chartType});
       }
     } else {

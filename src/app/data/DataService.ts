@@ -2,10 +2,9 @@ import {Injectable} from '@angular/core';
 
 import alasql from 'alasql';
 
-import {FieldDef, TableKeys, TableDef, Tables, TableMap} from './schema';
+import {TableKeys, TableMap} from './schema';
 
-import {loadData} from './data-loader';
-import {setupCube, query} from './olap';
+import {loadData, setupTable} from './data-loader';
 
 export interface Option {
   value: string | number;
@@ -32,7 +31,7 @@ export class DataService {
     // }
 
     // console.log('--------------');
-    setupCube();
+    setupTable();
 
     // let res = alasql('SELECT top 5 * FROM province');
     // console.log(res);

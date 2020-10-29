@@ -1,4 +1,5 @@
-import {FieldDef, TableKeys, TableDef, Tables, TableMap, loadDataBulk, loadDataRows} from './schema';
+import alasql from 'alasql';
+import {TableKeys, TableDef, Tables, TableMap, loadDataBulk, loadDataRows} from './schema';
 
 // 物流公司
 function setupLogisComp(): void {
@@ -6094,22 +6095,22 @@ export function loadData(): void {
   let compMap = new Map();
   let siteMap = new Map();
 
-  const cityDim = TableMap.get(TableKeys.City);
+  const cityDim: TableDef = TableMap.get(TableKeys.City);
   for (let {name, province} of cityDim.data) {
     cityProvinces.set(name, province);
   }
 
-  const catDim = TableMap.get(TableKeys.Category);
+  const catDim: TableDef = TableMap.get(TableKeys.Category);
   for (let {id, name} of catDim.data) {
     catMap.set(id, name);
   }
 
-  const compDim = TableMap.get(TableKeys.LogisComp);
+  const compDim: TableDef = TableMap.get(TableKeys.LogisComp);
   for (let comp of compDim.data) {
     compMap.set(comp.id, comp.name);
   }
 
-  const siteDim = TableMap.get(TableKeys.Site);
+  const siteDim: TableDef = TableMap.get(TableKeys.Site);
   for (let site of siteDim.data) {
     siteMap.set(site.id, site);
   }
@@ -6138,5 +6139,16 @@ export function loadData(): void {
       invoice.site = site.name;
       invoice.siteDistrict = site.district;
     }
+  }
+}
+
+export function setupTable(): void {
+
+  for (let dim of Tables) {
+    let {fields, table, data} = dim;
+    let fs = fields.map(f => `${f.name} ${f.type}`).join(', ');
+    alasql(`CREATE TABLE ${table} (${fs})`);
+    // @ts-ignore
+    alasql.tables[table].data = data;
   }
 }

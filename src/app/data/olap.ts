@@ -1,20 +1,9 @@
 import alasql from 'alasql';
-import {groupBy, reduce} from 'underscore';
+import {groupBy} from 'underscore';
 
-import {FieldDef, TableKeys, TableDef, Tables, TableMap} from './schema';
+import {FieldDef, TableDef} from './schema';
 import {CubeDimension, Measure, Cube, cubes} from './cube';
 
-function setupCube(): void {
-
-  for (let dim of Tables) {
-    let {fields, table, data} = dim;
-    let fs = fields.map(f => `${f.name} ${f.type}`).join(', ');
-    alasql(`CREATE TABLE ${table} (${fs})`);
-    // @ts-ignore
-    alasql.tables[table].data = data;
-  }
-
-}
 
 interface Dataset {
   dimensions: any[];
@@ -39,7 +28,7 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
     if (!cubeDimension) {
       throw new Error(`Dimension ${dim} Not Exists.`);
     }
-    let field = cubeDimension.field;
+    let field:FieldDef = cubeDimension.field;
     // {name: 'fhsf', displayName: '省份', type: 'ordinal'}
     let type = field.type === 'string' ? 'ordinal' : field.type;
     chartDimensions.push({name: cubeDimension.name, displayName: cubeDimension.desc, type});
@@ -118,7 +107,7 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
   let data = alasql(sql);
   console.log(data);
 
-  if (cubeDimensions.length > 1 && measureFields.length === 1) {
+  if (cubeDimensions.length === 2 && measureFields.length === 1) {
     let dimField = cubeDimensions[0].field.name;
     let dimField2 = cubeDimensions[1].field.name;
     let meaField = measureFields[0].name;
@@ -148,6 +137,7 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
     }
     data = newData;
 
+    chartDimensions.pop();
     for (let dim2Val of dim2Values) {
       chartDimensions.push({name: dim2Val, displayName: dim2Val, type: 'ordinal'});
     }
@@ -161,4 +151,4 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
   return {dimensions: chartDimensions, source: data};
 }
 
-export {setupCube, query, CubeDimension, Measure, Cube, cubes, Dataset};
+export {query, CubeDimension, Measure, Cube, cubes, Dataset};
