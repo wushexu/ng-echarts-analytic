@@ -110,13 +110,13 @@
             替换维值
           </mat-slide-toggle>
           &nbsp;
-          <button mat-raised-button (click)="dim1Values=''" (change)="dim1ValuesChanged()">清空</button>
+          <button mat-raised-button [disabled]="!dim1Values" (click)="dim1Values='';dim1ValuesChanged()">清空</button>
         </li>
         <li>
           <mat-form-field>
             <mat-label>维度1</mat-label>
             <textarea matInput rows="5" [disabled]="!overwriteDim1"
-                      [(ngModel)]='dim1Values' (change)="dim1ValuesChanged()"
+                      [(ngModel)]='dim1Values' (blur)="dim1ValuesChanged()"
                       placeholder="输入维度值，一行一个"></textarea>
           </mat-form-field>
         </li>
@@ -150,7 +150,9 @@
           </mat-form-field>
         </li>
         <li class="slide-toggle">
-          <mat-slide-toggle [(ngModel)]="transpose" color="primary" labelPosition="before" (change)="transposeToggle()">旋转</mat-slide-toggle>
+          <mat-slide-toggle [(ngModel)]="transpose" color="primary" labelPosition="before" (change)="transposeToggle()">
+            旋转
+          </mat-slide-toggle>
         </li>
         <li>
           <mat-form-field class="inline-number-input">

@@ -30,9 +30,9 @@ export class InvoiceAnalyzeComponent extends GenericChartComponent implements On
     this.cube.dimensions.forEach(dim => {
       let option: DimOption = {name: dim.name, label: dim.desc, dimension: dim};
       this.dimOptions.push(option);
-      // if (dim.name !== 'fhCity' && dim.name !== 'shCity') {
-      this.dim2Options.push(option);
-      // }
+      if (!dim.name.endsWith('Date')) {
+        this.dim2Options.push(option);
+      }
     });
 
     this.measureOptions = [];

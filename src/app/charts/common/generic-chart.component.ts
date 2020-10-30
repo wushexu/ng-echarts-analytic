@@ -124,9 +124,6 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
   }
 
   overwriteDim1Changed(): void {
-    if (this.dim1Values === '') {
-      return;
-    }
     this.refreshChart(true);
   }
 
