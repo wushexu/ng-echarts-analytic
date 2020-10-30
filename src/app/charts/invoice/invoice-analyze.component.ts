@@ -64,7 +64,7 @@ export class InvoiceAnalyzeComponent extends GenericChartComponent implements On
     }
 
     let measures = [this.selectedMeasure];
-    return query({cubeName: this.cube.name, dims, measures, slice});
+    return query({cubeName: this.cube.name, dims, measures, slice, limit: this.limit});
   }
 
 }

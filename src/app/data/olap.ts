@@ -11,10 +11,10 @@ interface Dataset {
 }
 
 
-function query(options?: { dims: string[], cubeName?: string, measures?: string[], slice?: any }): Dataset {
+function query(options?: { dims: string[], cubeName?: string, measures?: string[], slice?: any, limit?: number }): Dataset {
 
 
-  let {dims, cubeName, measures, slice} = options;
+  let {dims, cubeName, measures, slice, limit} = options;
 
   let cube: Cube = cubes[cubeName];
   if (!cube) {
@@ -28,7 +28,7 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
     if (!cubeDimension) {
       throw new Error(`Dimension ${dim} Not Exists.`);
     }
-    let field:FieldDef = cubeDimension.field;
+    let field: FieldDef = cubeDimension.field;
     // {name: 'fhsf', displayName: '省份', type: 'ordinal'}
     let type = field.type === 'string' ? 'ordinal' : field.type;
     chartDimensions.push({name: cubeDimension.name, displayName: cubeDimension.desc, type});
@@ -96,12 +96,17 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
 
   let factTable: TableDef = cube.factTable;
 
-  let sql = `select ${measureClause},${groupByClause} from ${factTable.table}`;
+  // TODO: order by measure
+  let sql = `select ${limit ? 'top ' + limit : ''} ${measureClause},${groupByClause} from ${factTable.table}`;
   if (whereClause) {
     sql = sql + ' where ' + whereClause;
   }
   sql = sql + ' group by ' + groupByClause;
-  sql = sql + ' order by ' + dimFieldNames[0];
+  if (limit) {
+    sql = sql + ' order by ' + measures[0] + ' desc';
+  } else {
+    sql = sql + ' order by ' + dimFieldNames[0];
+  }
   console.log('Query: ' + sql);
 
   let data = alasql(sql);

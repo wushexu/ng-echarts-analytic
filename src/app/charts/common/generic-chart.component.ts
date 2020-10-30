@@ -47,6 +47,9 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
   catFilter = '';
   fhsfFilter = '';
   shsfFilter = '';
+  limit: 0;
+  overwriteDim1 = false;
+  dim1Values = '';
 
   myChart: echarts.ECharts;
   currentDataset: Dataset;
@@ -120,6 +123,10 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
     this.refreshChart(true);
   }
 
+  dim1ValuesChanged(): void {
+    this.refreshChart(true);
+  }
+
   abstract buildDataset(dims): Dataset;
 
   refreshChart(keepData: boolean = false): void {
@@ -154,19 +161,33 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
       dataset = this.buildDataset(dims);
       this.currentDataset = dataset;
     }
+    if (this.overwriteDim1 && this.dim1Values) {
+      let values = this.dim1Values.split(/\r?\n/).map(v => v.trim()).filter(v => v.length > 0);
+      let len = Math.min(dataset.source.length, values.length);
+      if (len > 0) {
+        let newData = [];
+        for (let i = 0; i < len; i++) {
+          let row = {...dataset.source[i]};
+          row[this.selectedDim] = values[i];
+          newData.push(row);
+        }
+        dataset = {...dataset};
+        dataset.source = newData;
+      }
+    }
 
     let series = [];
     if (dims.length > 1) {
       for (let di = 1; di < dataset.dimensions.length; di++) {
         let serie: any = {type: this.chartType};
-        if (this.transpose) {
+        if (this.transpose && this.chartType !== 'pie') {
           serie.encode = {x: di, y: 0};
         }
         series.push(serie);
       }
     } else {
       let serie: any = {type: this.chartType};
-      if (this.transpose) {
+      if (this.transpose && this.chartType !== 'pie') {
         serie.encode = {x: 1, y: 0};
       }
       series.push(serie);

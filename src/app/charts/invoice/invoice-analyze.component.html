@@ -66,7 +66,7 @@
             </mat-select>
           </mat-form-field>
         </li>
-        <li>
+        <!--<li>
           <mat-form-field>
             <mat-label>收货省份</mat-label>
             <mat-select [(ngModel)]="shsfFilter" (selectionChange)="refreshChart()" panelClass="province-select-panel">
@@ -76,7 +76,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-        </li>
+        </li>-->
         <li>
           <mat-form-field>
             <mat-label>商品分类</mat-label>
@@ -86,6 +86,38 @@
                 {{opt.label}}
               </mat-option>
             </mat-select>
+          </mat-form-field>
+        </li>
+      </ul>
+    </div>
+    <div class="config-column">
+      <div class="title">数据集</div>
+      <ul>
+        <li>
+          <mat-form-field>
+            <mat-label>记录条数</mat-label>
+            <mat-select [(ngModel)]="limit" (selectionChange)="refreshChart()">
+              <mat-option value="0">（不限）</mat-option>
+              <mat-option value="5">前5条</mat-option>
+              <mat-option value="10">前10条</mat-option>
+              <mat-option value="20">前20条</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </li>
+        <li class="slide-toggle">
+          <mat-slide-toggle [(ngModel)]="overwriteDim1" color="primary" labelPosition="before"
+                            (change)="dim1ValuesChanged()">
+            替换维值
+          </mat-slide-toggle>
+          &nbsp;
+          <button mat-raised-button (click)="dim1Values=''" (change)="dim1ValuesChanged()">清空</button>
+        </li>
+        <li>
+          <mat-form-field>
+            <mat-label>维度1</mat-label>
+            <textarea matInput rows="5" [disabled]="!overwriteDim1"
+                      [(ngModel)]='dim1Values' (change)="dim1ValuesChanged()"
+                      placeholder="输入维度值，一行一个"></textarea>
           </mat-form-field>
         </li>
       </ul>
