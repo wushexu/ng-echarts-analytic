@@ -123,6 +123,13 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
     this.refreshChart(true);
   }
 
+  overwriteDim1Changed(): void {
+    if (this.dim1Values === '') {
+      return;
+    }
+    this.refreshChart(true);
+  }
+
   dim1ValuesChanged(): void {
     this.refreshChart(true);
   }
@@ -196,28 +203,79 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
     let xAxis: EChartOption.XAxis = this.transpose ? {} : {type: 'category'};
     let yAxis: EChartOption.YAxis = this.transpose ? {type: 'category'} : {};
 
-    const option: EChartOption = {
-      color: this.chartColors,
-      legend: {},
-      tooltip: {
-        trigger: 'axis'
-      },
-      toolbox: {
-        show: true,
-        feature: {
-          // dataView: {show: true, readOnly: false},
-          // magicType: {show: true, type: ['line', 'bar']},
-          // restore: {show: true},
-          saveAsImage: {show: true}
-        }
-      },
-      dataset,
-      xAxis,
-      yAxis,
-      series
-    };
+    if (this.chartType === 'pie' && dims.length === 2) {
 
-    this.myChart.setOption(option);
+      let cubeDim1 = this.cube.getDimension(dims[0]);
+      let cubeDim2 = this.cube.getDimension(dims[1]);
+
+      let innerData = [];
+      let outerData = [];
+      let dim1 = dims[0];
+      for (let row of dataset.source) {
+        let sum = 0;
+        for (let dimVal in row) {
+          if (!row.hasOwnProperty(dimVal)) {
+            continue;
+          }
+          if (dimVal !== dim1) {
+            let val = row[dimVal];
+            if (val) {
+              outerData.push({name: dimVal, value: val});
+              sum += val;
+            }
+          }
+        }
+        innerData.push({name: row[dim1], value: sum});
+      }
+
+      const option: EChartOption = {
+        tooltip: {},
+        legend: {},
+        series: [
+          {
+            name: cubeDim1.desc,
+            type: 'pie',
+            selectedMode: 'single',
+            radius: [0, '30%'],
+            label: {
+              position: 'inner'
+            },
+            data: innerData
+          },
+          {
+            name: cubeDim2.desc,
+            type: 'pie',
+            radius: ['40%', '55%'],
+            data: outerData
+          }
+        ]
+      };
+
+      this.myChart.setOption(option);
+    } else {
+      const option: EChartOption = {
+        color: this.chartColors,
+        legend: {},
+        tooltip: {
+          trigger: 'axis'
+        },
+        toolbox: {
+          show: true,
+          feature: {
+            // dataView: {show: true, readOnly: false},
+            // magicType: {show: true, type: ['line', 'bar']},
+            // restore: {show: true},
+            saveAsImage: {show: true}
+          }
+        },
+        dataset,
+        xAxis,
+        yAxis,
+        series
+      };
+
+      this.myChart.setOption(option);
+    }
   }
 
 }

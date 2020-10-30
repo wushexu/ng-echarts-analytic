@@ -1058,14 +1058,14 @@ function setupCategory(): void {
 function setupSite(): void {
   const wl = '51\t天源物流园\t园区\t兰山区\n' +
     '52\t广缘国际物流园\t园区\t兰山区\n' +
-    '53\t临沂龙潭渔业产业园\t园区\t临沭县\n' +
+    '53\t临沂龙潭渔业产业园\t园区\t兰山区\n' +
     '54\t广亚铝业工业园\t园区\t河东区\n' +
-    '55\t金迪海宝产业园\t园区\t沂南县\n' +
+    '55\t金迪海宝产业园\t园区\t河东区\n' +
     '56\t新华印刷工业园\t园区\t罗庄区\n' +
-    '56\t金胜粮油产业园\t园区\t莒南县\n' +
-    '57\t西城工业园\t园区\t沂水县\n' +
-    '58\t费县银源电商产业园\t园区\t费县\n' +
-    '59\t山东省智慧园区\t园区\t郯城县\n';
+    '56\t金胜粮油产业园\t园区\t罗庄区\n' +
+    '57\t西城工业园\t园区\t河东区\n' +
+    '58\t费县银源电商产业园\t园区\t河东区\n' +
+    '59\t山东省智慧园区\t园区\t兰山区\n';
 
   const wlDim = TableMap.get(TableKeys.Site);
   wlDim.data = loadDataBulk(wl, wlDim.fields);

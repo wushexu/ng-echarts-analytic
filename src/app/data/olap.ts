@@ -107,10 +107,11 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
   } else {
     sql = sql + ' order by ' + dimFieldNames[0];
   }
-  console.log('Query: ' + sql);
+  // console.log('Query: ' + sql);
 
   let data = alasql(sql);
-  console.log(data);
+  data = data.filter(row => row[dimFieldNames[0]]);
+  // console.log(data);
 
   if (cubeDimensions.length === 2 && measureFields.length === 1) {
     let dimField = cubeDimensions[0].field.name;
@@ -146,7 +147,7 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
     for (let dim2Val of dim2Values) {
       chartDimensions.push({name: dim2Val, displayName: dim2Val, type: 'ordinal'});
     }
-    console.log(data);
+    // console.log(data);
   } else {
     measureFields.forEach(measure => {
       chartDimensions.push({name: measure.name, displayName: measure.desc, type: measure.type});
