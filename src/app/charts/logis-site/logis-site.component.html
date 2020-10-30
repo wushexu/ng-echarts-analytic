@@ -84,17 +84,17 @@
         </li>
         <li class="slide-toggle">
           <mat-slide-toggle [(ngModel)]="overwriteDim1" color="primary" labelPosition="before"
-                            (change)="overwriteDim1Changed()">
+                            (change)="redrawChart()">
             替换维值
           </mat-slide-toggle>
           &nbsp;
-          <button mat-raised-button [disabled]="!dim1Values" (click)="dim1Values='';dim1ValuesChanged()">清空</button>
+          <button mat-raised-button [disabled]="!dim1Values" (click)="dim1Values='';redrawChart()">清空</button>
         </li>
         <li>
           <mat-form-field>
             <mat-label>维度1</mat-label>
             <textarea matInput rows="5" [disabled]="!overwriteDim1"
-                      [(ngModel)]='dim1Values' (blur)="dim1ValuesChanged()"
+                      [(ngModel)]='dim1Values' (blur)="redrawChart()"
                       placeholder="输入维度值，一行一个"></textarea>
           </mat-form-field>
         </li>
@@ -106,7 +106,7 @@
         <li>
           <mat-form-field>
             <mat-label>类型</mat-label>
-            <mat-select [(ngModel)]="chartType" (selectionChange)="chartTypeChanged()">
+            <mat-select [(ngModel)]="chartType" (selectionChange)="redrawChart()">
               <mat-option value="bar">柱状图</mat-option>
               <mat-option value="line">折线图</mat-option>
               <mat-option value="pie">饼状图</mat-option>
@@ -128,17 +128,23 @@
           </mat-form-field>
         </li>
         <li class="slide-toggle">
-          <mat-slide-toggle [(ngModel)]="transpose" color="primary" labelPosition="before" (change)="transposeToggle()">
+          <mat-slide-toggle [(ngModel)]="transpose" color="primary" labelPosition="before" (change)="redrawChart()">
             旋转
+          </mat-slide-toggle>
+          &nbsp;&nbsp;
+          <mat-slide-toggle [(ngModel)]="chartStack"
+                            [disabled]="!selectedDim2||selectedDim===selectedDim2||(chartType!=='bar'&&chartType!=='line')"
+                            color="primary" labelPosition="before" (change)="redrawChart()">
+            堆叠
           </mat-slide-toggle>
         </li>
         <li>
           <mat-form-field class="inline-number-input">
-            <input matInput placeholder="宽" [(ngModel)]="chartWidth" type="number" step="50" (change)="resized()">
+            <input matInput placeholder="宽" [(ngModel)]="chartWidth" type="number" step="50" (change)="redrawChart()">
           </mat-form-field>
           &nbsp;
           <mat-form-field class="inline-number-input">
-            <input matInput placeholder="高" [(ngModel)]="chartHeight" type="number" step="50" (change)="resized()">
+            <input matInput placeholder="高" [(ngModel)]="chartHeight" type="number" step="50" (change)="redrawChart()">
           </mat-form-field>
         </li>
         <li>

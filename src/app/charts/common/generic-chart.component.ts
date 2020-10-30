@@ -34,6 +34,7 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
   provOptions: Option[];
 
   chartType = 'bar';
+  chartStack = false;
   chartWidth = 1200;
   chartHeight = 400;
   transpose = false;
@@ -111,23 +112,7 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
     this.refreshChart(true);
   }
 
-  resized(): void {
-    this.refreshChart(true);
-  }
-
-  chartTypeChanged(): void {
-    this.refreshChart(true);
-  }
-
-  transposeToggle(): void {
-    this.refreshChart(true);
-  }
-
-  overwriteDim1Changed(): void {
-    this.refreshChart(true);
-  }
-
-  dim1ValuesChanged(): void {
+  redrawChart(): void {
     this.refreshChart(true);
   }
 
@@ -155,14 +140,6 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
       }
     }
 
-    if (this.myChart) {
-      // this.myChart.clear();
-      this.myChart.dispose();
-    }
-
-    const holder: HTMLDivElement = this.chartDiv.nativeElement as HTMLDivElement;
-    this.myChart = echarts.init(holder);
-
     let dataset;
     if (keepData && this.currentDataset) {
       dataset = this.currentDataset;
@@ -187,114 +164,143 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
       }
     }
 
+    if (this.myChart) {
+      // this.myChart.clear();
+      this.myChart.dispose();
+    }
+
+    const holder = this.chartDiv.nativeElement as HTMLDivElement;
+    this.myChart = echarts.init(holder);
+
     if (this.chartType === 'pie' && dims.length === 2) {
       // 两级饼图
+      this.buildTwoLayerPie(dims, dataset);
+      return;
+    }
 
-      let cubeDim1 = this.cube.getDimension(dims[0]);
-      let cubeDim2 = this.cube.getDimension(dims[1]);
+    this.buildChart(dims, dataset);
+  }
 
-      let innerData = [];
-      let outerData = [];
-      let dim1 = dims[0];
-      for (let row of dataset.source) {
-        let sum = 0;
-        for (let dimVal in row) {
-          if (!row.hasOwnProperty(dimVal)) {
-            continue;
-          }
-          if (dimVal !== dim1) {
-            let val = row[dimVal];
-            if (val) {
-              outerData.push({name: dimVal, value: val});
-              sum += val;
-            }
+  buildTwoLayerPie(dims: string[], dataset: Dataset): void {
+
+    let cubeDim1 = this.cube.getDimension(dims[0]);
+    let cubeDim2 = this.cube.getDimension(dims[1]);
+
+    let innerData = [];
+    let outerData = [];
+    let dim1 = dims[0];
+    for (let row of dataset.source) {
+      let sum = 0;
+      for (let dimVal in row) {
+        if (!row.hasOwnProperty(dimVal)) {
+          continue;
+        }
+        if (dimVal !== dim1) {
+          let val = row[dimVal];
+          if (val) {
+            outerData.push({name: dimVal, value: val});
+            sum += val;
           }
         }
-        innerData.push({name: row[dim1], value: sum});
       }
+      innerData.push({name: row[dim1], value: sum});
+    }
 
-      const option: EChartOption = {
-        tooltip: {},
-        legend: {},
-        series: [
-          {
-            name: cubeDim1.desc,
-            type: 'pie',
-            selectedMode: 'single',
-            radius: [0, '30%'],
-            label: {
-              position: 'inner'
-            },
-            data: innerData
+    const option: EChartOption = {
+      tooltip: {},
+      legend: {},
+      series: [
+        {
+          name: cubeDim1.desc,
+          type: 'pie',
+          selectedMode: 'single',
+          radius: [0, '30%'],
+          label: {
+            position: 'inner'
           },
-          {
-            name: cubeDim2.desc,
-            type: 'pie',
-            radius: ['40%', '55%'],
-            data: outerData
-          }
-        ]
-      };
-
-      this.myChart.setOption(option);
-
-    } else {
-      let series = [];
-      let dsDims = dataset.dimensions;
-      if (dims.length > 1) {
-        for (let di = 1; di < dsDims.length; di++) {
-          let serie: any = {type: this.chartType, name: dsDims[di].displayName};
-          if (this.transpose && this.chartType !== 'pie') {
-            serie.encode = {x: di, y: 0};
-          }
-          series.push(serie);
+          data: innerData
+        },
+        {
+          name: cubeDim2.desc,
+          type: 'pie',
+          radius: ['40%', '55%'],
+          data: outerData
         }
-      } else {
-        let serie: any = {type: this.chartType, name: dsDims[1].displayName};
-        if (this.transpose && this.chartType !== 'pie') {
-          serie.encode = {x: 1, y: 0};
+      ]
+    };
+
+    this.myChart.setOption(option);
+
+  }
+
+
+  buildChart(dims: string[], dataset: Dataset): void {
+
+    let type = this.chartType;
+    let series = [];
+    let dsDims = dataset.dimensions;
+    if (dims.length > 1) {
+      for (let di = 1; di < dsDims.length; di++) {
+        let serie: any = {type, name: dsDims[di].displayName};
+        if (this.transpose && type !== 'pie') {
+          serie.encode = {x: di, y: 0};
         }
         series.push(serie);
       }
-
-      let xAxis: EChartOption.XAxis = this.transpose ? {} : {type: 'category'};
-      let yAxis: EChartOption.YAxis = this.transpose ? {type: 'category'} : {};
-
-      const option: EChartOption = {
-        color: this.chartColors,
-        legend: {},
-        tooltip: {
-          trigger: 'axis',
-          formatter: (param) => {
-            // https://github.com/apache/incubator-echarts/issues/4427
-            // console.log(param);
-            let params = (param['length'] ? param : [param]) as EChartOption.Tooltip.Format[];
-            let html = params[0].name + '<br>';
-            params.forEach(item => {
-              let axis = this.transpose ? item.encode['x'][0] : item.encode['y'][0];
-              let value = item.value[item.dimensionNames[axis]] || 0;
-              html += '&nbsp;&nbsp;' + item.marker + item.seriesName + ' ' + value + '<br>';
-            });
-            return html;
-          }
-        },
-        toolbox: {
-          show: true,
-          feature: {
-            // dataView: {show: true, readOnly: false},
-            // magicType: {show: true, type: ['line', 'bar']},
-            // restore: {show: true},
-            saveAsImage: {show: true}
-          }
-        },
-        dataset,
-        xAxis,
-        yAxis,
-        series
-      };
-
-      this.myChart.setOption(option);
+    } else {
+      let serie: any = {type, name: dsDims[1].displayName};
+      if (this.transpose && type !== 'pie') {
+        serie.encode = {x: 1, y: 0};
+      }
+      series.push(serie);
     }
-  }
+    series.forEach(serie => {
+      if (this.chartStack) {
+        serie.stack = 'A';
+        if (type === 'line') {
+          serie.areaStyle = {};
+        }
+      }
+    });
 
+    let xAxis: EChartOption.XAxis = this.transpose ? {type: 'value'} : {type: 'category'};
+    let yAxis: EChartOption.YAxis = this.transpose ? {type: 'category'} : {type: 'value'};
+
+    const option: EChartOption = {
+      color: this.chartColors,
+      legend: {},
+      tooltip: {
+        trigger: 'axis',
+        formatter: (param) => {
+          // https://github.com/apache/incubator-echarts/issues/4427
+          // console.log(param);
+          let params = (param['length'] ? param : [param]) as EChartOption.Tooltip.Format[];
+          let html = params[0].name + '<br>';
+          params.forEach(item => {
+            let axis = this.transpose ? item.encode['x'][0] : item.encode['y'][0];
+            let value = item.value[item.dimensionNames[axis]] || 0;
+            html += '&nbsp;&nbsp;' + item.marker + item.seriesName + ' ' + value + '<br>';
+          });
+          return html;
+        }
+      },
+      toolbox: {
+        show: true,
+        feature: {
+          // dataView: {show: true, readOnly: false},
+          // magicType: {show: true, type: ['line', 'bar']},
+          // restore: {show: true},
+          saveAsImage: {show: true}
+        }
+      },
+      dataset,
+      xAxis,
+      yAxis,
+      series
+    };
+
+    // console.log(JSON.stringify(option, null, 2));
+
+    this.myChart.setOption(option);
+  }
 }

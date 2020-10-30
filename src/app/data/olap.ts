@@ -148,8 +148,10 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
       for (let row of rs) {
         let meaVal = row[meaField];
         let dim2Val = row[dimField2];
-        dim2Values.add(dim2Val);
-        row0[dim2Val] = meaVal;
+        if (dim2Val) {
+          dim2Values.add(dim2Val);
+          row0[dim2Val] = meaVal;
+        }
       }
       delete row0[dimField2];
       delete row0[meaField];
@@ -159,7 +161,7 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
 
     chartDimensions.pop();
     for (let dim2Val of dim2Values) {
-      chartDimensions.push({name: dim2Val, displayName: dim2Val, type: 'ordinal'});
+      chartDimensions.push({name: dim2Val, displayName: dim2Val, type: 'number'});
     }
     // console.log(data);
   } else {

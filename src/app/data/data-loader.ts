@@ -1042,12 +1042,12 @@ function setupCategory(): void {
   const wl = 'id\t分类\n' +
     '61\t服装\n' +
     '62\t农产品\n' +
-    '63\t加工食品\n' +
+    '63\t食品\n' +
     '64\t家电\n' +
     '65\t电子产品\n' +
     '66\t家具\n' +
     '67\t建材\n' +
-    '68\t药品、医疗器械\n' +
+    '68\t生鲜冷链\n' +
     '69\t其他\n';
 
   const wlDim = TableMap.get(TableKeys.Category);
