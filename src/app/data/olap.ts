@@ -10,6 +10,9 @@ interface Dataset {
   source: any[];
 }
 
+// @ts-ignore
+alasql.fn.concat = (a, b) => `${a || ''}.${b}`;
+
 
 function query(options?: { dims: string[], cubeName?: string, measures?: string[], slice?: any, limit?: number }): Dataset {
 
@@ -48,15 +51,12 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
     return measure;
   });
 
-  let measureClause = measureFields.map(measure => {
+  let measureFieldsSql = measureFields.map(measure => {
     if (measure.aggSql) {
       return measure.aggSql;
     }
     return `sum(${measure.name}) as ${measure.name}`;
   }).join(',');
-
-  let dimFieldNames = cubeDimensions.map(cdim => cdim.field.name);
-  let groupByClause = dimFieldNames.join(',');
 
   let whereClause = null;
   if (slice) {
@@ -96,21 +96,35 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
 
   let factTable: TableDef = cube.factTable;
 
-  // TODO: order by measure
-  let sql = `select ${limit ? 'top ' + limit : ''} ${measureClause},${groupByClause} from ${factTable.table}`;
+  let dimFieldNames = cubeDimensions.map(cdim => cdim.field.name);
+  let groupByFieldsSql = dimFieldNames.join(',');
+
+  let dimField0 = dimFieldNames[0];
+
+  let orderField = dimField0;
+  if (limit && !dimField0.endsWith('Date')) {
+    orderField = '[' + measures[0] + '] desc';
+  }
+
+  let dimFieldsSql = groupByFieldsSql;
+  if (dimField0 === 'fhCity') {
+    dimFieldsSql = dimFieldsSql.replace('fhCity', 'concat(fhsf,fhCity) fhCity');
+    groupByFieldsSql = 'fhsf,fhCity';
+  } else if (dimField0 === 'shCity') {
+    dimFieldsSql = dimFieldsSql.replace('shCity', 'concat(shsf,shCity) shCity');
+    groupByFieldsSql = 'shsf,shCity';
+  }
+
+  let sql = `select ${limit ? 'top ' + limit : ''} ${measureFieldsSql},${dimFieldsSql} from ${factTable.table}`;
   if (whereClause) {
     sql = sql + ' where ' + whereClause;
   }
-  sql = sql + ' group by ' + groupByClause;
-  if (limit) {
-    sql = sql + ' order by ' + measures[0] + ' desc';
-  } else {
-    sql = sql + ' order by ' + dimFieldNames[0];
-  }
+  sql = sql + ' group by ' + groupByFieldsSql;
+  sql = sql + ' order by ' + orderField;
   // console.log('Query: ' + sql);
 
   let data = alasql(sql);
-  data = data.filter(row => row[dimFieldNames[0]]);
+  data = data.filter(row => row[dimField0]);
   // console.log(data);
 
   if (cubeDimensions.length === 2 && measureFields.length === 1) {

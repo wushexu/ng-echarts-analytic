@@ -151,6 +151,13 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
       dims.push(this.selectedDim2);
     }
 
+    if ((dims[0] === 'fhsf' && dims[1] === 'fhCity') || (dims[0] === 'shsf' && dims[1] === 'shCity')) {
+      // 省份跟城市不能交叉
+      if (this.chartType !== 'pie') {
+        dims.shift();
+      }
+    }
+
     if (this.myChart) {
       // this.myChart.clear();
       this.myChart.dispose();
@@ -175,7 +182,7 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
         let newData = [];
         for (let i = 0; i < len; i++) {
           let row = {...dataset.source[i]};
-          row[this.selectedDim] = values[i];
+          row[dims[0]] = values[i];
           newData.push(row);
         }
         dataset = {...dataset};
@@ -183,27 +190,8 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
       }
     }
 
-    let series = [];
-    if (dims.length > 1) {
-      for (let di = 1; di < dataset.dimensions.length; di++) {
-        let serie: any = {type: this.chartType};
-        if (this.transpose && this.chartType !== 'pie') {
-          serie.encode = {x: di, y: 0};
-        }
-        series.push(serie);
-      }
-    } else {
-      let serie: any = {type: this.chartType};
-      if (this.transpose && this.chartType !== 'pie') {
-        serie.encode = {x: 1, y: 0};
-      }
-      series.push(serie);
-    }
-
-    let xAxis: EChartOption.XAxis = this.transpose ? {} : {type: 'category'};
-    let yAxis: EChartOption.YAxis = this.transpose ? {type: 'category'} : {};
-
     if (this.chartType === 'pie' && dims.length === 2) {
+      // 两级饼图
 
       let cubeDim1 = this.cube.getDimension(dims[0]);
       let cubeDim2 = this.cube.getDimension(dims[1]);
@@ -252,12 +240,46 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
       };
 
       this.myChart.setOption(option);
+
     } else {
+      let series = [];
+      let dsDims = dataset.dimensions;
+      if (dims.length > 1) {
+        for (let di = 1; di < dsDims.length; di++) {
+          let serie: any = {type: this.chartType, name: dsDims[di].displayName};
+          if (this.transpose && this.chartType !== 'pie') {
+            serie.encode = {x: di, y: 0};
+          }
+          series.push(serie);
+        }
+      } else {
+        let serie: any = {type: this.chartType, name: dsDims[1].displayName};
+        if (this.transpose && this.chartType !== 'pie') {
+          serie.encode = {x: 1, y: 0};
+        }
+        series.push(serie);
+      }
+
+      let xAxis: EChartOption.XAxis = this.transpose ? {} : {type: 'category'};
+      let yAxis: EChartOption.YAxis = this.transpose ? {type: 'category'} : {};
+
       const option: EChartOption = {
         color: this.chartColors,
         legend: {},
         tooltip: {
-          trigger: 'axis'
+          trigger: 'axis',
+          formatter: (param) => {
+            // https://github.com/apache/incubator-echarts/issues/4427
+            // console.log(param);
+            let params = (param['length'] ? param : [param]) as EChartOption.Tooltip.Format[];
+            let html = params[0].name + '<br>';
+            params.forEach(item => {
+              let axis = this.transpose ? item.encode['x'][0] : item.encode['y'][0];
+              let value = item.value[item.dimensionNames[axis]] || 0;
+              html += '&nbsp;&nbsp;' + item.marker + item.seriesName + ' ' + value + '<br>';
+            });
+            return html;
+          }
         },
         toolbox: {
           show: true,
