@@ -33,12 +33,16 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
   catOptions: Option[];
   provOptions: Option[];
 
+  chartColors = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae',
+    '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'];
   chartType = 'bar';
   chartStack = false;
   chartWidth = 1200;
   chartHeight = 400;
-  transpose = false;
-  chartColors = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'];
+  chartTranspose = false;
+  chartDarkTheme = false;
+  chartTitle = '';
+  chartSubTitle = '';
 
   selectedDim = '';
   selectedDim2 = '';
@@ -170,7 +174,7 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
     }
 
     const holder = this.chartDiv.nativeElement as HTMLDivElement;
-    this.myChart = echarts.init(holder);
+    this.myChart = echarts.init(holder, this.chartDarkTheme ? 'dark' : 'light');
 
     if (this.chartType === 'pie' && dims.length === 2) {
       // 两级饼图
@@ -205,8 +209,10 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
       }
       innerData.push({name: row[dim1], value: sum});
     }
+    let title = {text: this.chartTitle, subtext: this.chartSubTitle};
 
     const option: EChartOption = {
+      title,
       tooltip: {},
       legend: {},
       series: [
@@ -242,14 +248,14 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
     if (dims.length > 1) {
       for (let di = 1; di < dsDims.length; di++) {
         let serie: any = {type, name: dsDims[di].displayName};
-        if (this.transpose && type !== 'pie') {
+        if (this.chartTranspose && type !== 'pie') {
           serie.encode = {x: di, y: 0};
         }
         series.push(serie);
       }
     } else {
       let serie: any = {type, name: dsDims[1].displayName};
-      if (this.transpose && type !== 'pie') {
+      if (this.chartTranspose && type !== 'pie') {
         serie.encode = {x: 1, y: 0};
       }
       series.push(serie);
@@ -262,27 +268,29 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
         }
       }
     });
+    let title = {text: this.chartTitle, subtext: this.chartSubTitle};
 
-    let xAxis: EChartOption.XAxis = this.transpose ? {type: 'value'} : {type: 'category'};
-    let yAxis: EChartOption.YAxis = this.transpose ? {type: 'category'} : {type: 'value'};
+    let xAxis: EChartOption.XAxis = this.chartTranspose ? {type: 'value'} : {type: 'category'};
+    let yAxis: EChartOption.YAxis = this.chartTranspose ? {type: 'category'} : {type: 'value'};
 
     const option: EChartOption = {
       color: this.chartColors,
+      title,
       legend: {},
       tooltip: {
-        trigger: 'axis',
+        trigger: 'axis'/*,
         formatter: (param) => {
           // https://github.com/apache/incubator-echarts/issues/4427
           // console.log(param);
           let params = (param['length'] ? param : [param]) as EChartOption.Tooltip.Format[];
           let html = params[0].name + '<br>';
           params.forEach(item => {
-            let axis = this.transpose ? item.encode['x'][0] : item.encode['y'][0];
+            let axis = this.chartTranspose ? item.encode['x'][0] : item.encode['y'][0];
             let value = item.value[item.dimensionNames[axis]] || 0;
             html += '&nbsp;&nbsp;' + item.marker + item.seriesName + ' ' + value + '<br>';
           });
           return html;
-        }
+        }*/
       },
       toolbox: {
         show: true,

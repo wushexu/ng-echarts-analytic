@@ -16,7 +16,6 @@ alasql.fn.concat = (a, b) => `${a || ''}.${b}`;
 
 function query(options?: { dims: string[], cubeName?: string, measures?: string[], slice?: any, limit?: number }): Dataset {
 
-
   let {dims, cubeName, measures, slice, limit} = options;
 
   let cube: Cube = cubes[cubeName];
@@ -24,20 +23,13 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
     throw new Error(`Cube ${cubeName} Not Exists.`);
   }
 
-  let chartDimensions = [];
-
   let cubeDimensions = dims.map(dim => {
     let cubeDimension: CubeDimension = cube.getDimension(dim);
     if (!cubeDimension) {
       throw new Error(`Dimension ${dim} Not Exists.`);
     }
-    let field: FieldDef = cubeDimension.field;
-    // {name: 'fhsf', displayName: '省份', type: 'ordinal'}
-    let type = field.type === 'string' ? 'ordinal' : field.type;
-    chartDimensions.push({name: cubeDimension.name, displayName: cubeDimension.desc, type});
     return cubeDimension;
   });
-
 
   if (!measures) {
     measures = [cube.defaultMeasure];
@@ -126,6 +118,19 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
   let data = alasql(sql);
   data = data.filter(row => row[dimField0]);
   // console.log(data);
+
+  return buildDataset(cubeDimensions, measureFields, data);
+}
+
+function buildDataset(cubeDimensions: CubeDimension[], measureFields: Measure[], data: any[]): Dataset {
+
+  let chartDimensions = [];
+  cubeDimensions.map(cubeDimension => {
+    let field: FieldDef = cubeDimension.field;
+    // {name: 'fhsf', displayName: '省份', type: 'ordinal'}
+    let type = field.type === 'string' ? 'ordinal' : field.type;
+    chartDimensions.push({name: cubeDimension.name, displayName: cubeDimension.desc, type});
+  });
 
   if (cubeDimensions.length === 2 && measureFields.length === 1) {
     let dimField = cubeDimensions[0].field.name;

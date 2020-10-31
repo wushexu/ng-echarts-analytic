@@ -150,7 +150,8 @@
           </mat-form-field>
         </li>
         <li class="slide-toggle">
-          <mat-slide-toggle [(ngModel)]="transpose" color="primary" labelPosition="before" (change)="redrawChart()">
+          <mat-slide-toggle [(ngModel)]="chartTranspose" color="primary" labelPosition="before"
+                            (change)="redrawChart()">
             旋转
           </mat-slide-toggle>
           &nbsp;&nbsp;
@@ -174,6 +175,33 @@
           <button mat-raised-button (click)="colorRollBackward()">&lt;&lt;</button>
           &nbsp;
           <button mat-raised-button (click)="colorRollForward()">&gt;&gt;</button>
+        </li>
+      </ul>
+    </div>
+    <div class="config-column">
+      <div class="title">图表</div>
+      <ul>
+        <li class="slide-toggle">
+          <mat-slide-toggle [(ngModel)]="chartDarkTheme" color="primary" labelPosition="before"
+                            (change)="redrawChart()">
+            深色主题
+          </mat-slide-toggle>
+        </li>
+        <li>
+          <mat-form-field>
+            <input matInput placeholder="标题" [(ngModel)]="chartTitle" (change)="redrawChart()">
+          </mat-form-field>
+        </li>
+        <li>
+          <mat-form-field>
+            <input matInput placeholder="子标题" [(ngModel)]="chartSubTitle" (change)="redrawChart()">
+          </mat-form-field>
+        </li>
+        <li>
+          <button mat-raised-button [disabled]="!chartTitle&&!chartSubTitle"
+                  (click)="chartTitle='';chartSubTitle='';redrawChart()">
+            清空标题
+          </button>
         </li>
       </ul>
     </div>
