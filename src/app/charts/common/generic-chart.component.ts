@@ -66,6 +66,8 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
   limit: 0;
   overwriteDim1 = false;
   dim1Values = '';
+  overwriteMeasure = false;
+  measureName = '';
 
   myChart: echarts.ECharts;
   currentDataset: Dataset;
@@ -276,7 +278,11 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
         series.push(serie);
       }
     } else {
-      let serie: any = {type, name: dsDims[1].displayName};
+      let seriesName = dsDims[1].displayName;
+      if (this.overwriteMeasure && this.measureName) {
+        seriesName = this.measureName;
+      }
+      let serie: any = {type, name: seriesName};
       if (this.chartTranspose && type !== 'pie') {
         serie.encode = {x: 1, y: 0};
       }
@@ -290,6 +296,8 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
         }
       }
     });
+
+    console.log(JSON.stringify(series, null, 2));
 
     let xAxis: EChartOption.XAxis = this.chartTranspose ? {type: 'value'} : {type: 'category'};
     let yAxis: EChartOption.YAxis = this.chartTranspose ? {type: 'category'} : {type: 'value'};

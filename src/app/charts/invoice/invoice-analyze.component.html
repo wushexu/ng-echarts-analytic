@@ -12,6 +12,20 @@
           </li>
         </ul>
       </mat-radio-group>
+      <ul>
+        <li class="slide-toggle">
+          <mat-slide-toggle [(ngModel)]="overwriteMeasure" color="primary" labelPosition="before"
+                            (change)="redrawChart()">
+            替换指标名
+          </mat-slide-toggle>
+        </li>
+        <li>
+          <mat-form-field class="measure-name-input">
+            <input matInput placeholder="指标名" [disabled]="!overwriteMeasure" [(ngModel)]="measureName"
+                   (change)="redrawChart()">
+          </mat-form-field>
+        </li>
+      </ul>
     </div>
     <div class="config-column">
       <div class="title">维度1</div>

@@ -89,3 +89,7 @@ body {
 .config-column li.slide-toggle {
   padding-bottom: 0.9em;
 }
+
+.config-column li .measure-name-input {
+  width: 8em;
+}
