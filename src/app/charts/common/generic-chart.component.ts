@@ -41,8 +41,18 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
   chartHeight = 400;
   chartTranspose = false;
   chartDarkTheme = false;
+  // chartBackgroundColor: string = null; // #404040: null,#333
   chartTitle = '';
   chartSubTitle = '';
+  chartToolbox = {
+    show: false,
+    feature: {
+      // dataView: {show: true, readOnly: false},
+      // magicType: {show: true, type: ['line', 'bar']},
+      // restore: {show: true},
+      saveAsImage: {show: true}
+    }
+  };
 
   selectedDim = '';
   selectedDim2 = '';
@@ -174,7 +184,7 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
     }
 
     const holder = this.chartDiv.nativeElement as HTMLDivElement;
-    this.myChart = echarts.init(holder, this.chartDarkTheme ? 'dark' : 'light');
+    this.myChart = echarts.init(holder, this.chartDarkTheme ? 'dark' : null); // light
 
     if (this.chartType === 'pie' && dims.length === 2) {
       // 两级饼图
@@ -215,6 +225,7 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
       title,
       tooltip: {},
       legend: {},
+      toolbox: this.chartToolbox,
       series: [
         {
           name: cubeDim1.desc,
@@ -292,15 +303,7 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
           return html;
         }*/
       },
-      toolbox: {
-        show: true,
-        feature: {
-          // dataView: {show: true, readOnly: false},
-          // magicType: {show: true, type: ['line', 'bar']},
-          // restore: {show: true},
-          saveAsImage: {show: true}
-        }
-      },
+      toolbox: this.chartToolbox,
       dataset,
       xAxis,
       yAxis,

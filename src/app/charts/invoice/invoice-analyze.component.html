@@ -88,11 +88,6 @@
             </mat-select>
           </mat-form-field>
         </li>
-      </ul>
-    </div>
-    <div class="config-column">
-      <div class="title">数据集</div>
-      <ul>
         <li>
           <mat-form-field>
             <mat-label>记录条数</mat-label>
@@ -104,6 +99,11 @@
             </mat-select>
           </mat-form-field>
         </li>
+      </ul>
+    </div>
+    <div class="config-column">
+      <div class="title">数据集</div>
+      <ul>
         <li class="slide-toggle">
           <mat-slide-toggle [(ngModel)]="overwriteDim1" color="primary" labelPosition="before"
                             (change)="redrawChart()">
@@ -115,7 +115,7 @@
         <li>
           <mat-form-field>
             <mat-label>维度1</mat-label>
-            <textarea matInput rows="5" [disabled]="!overwriteDim1"
+            <textarea matInput rows="7" [disabled]="!overwriteDim1"
                       [(ngModel)]='dim1Values' (blur)="redrawChart()"
                       placeholder="输入维度值，一行一个"></textarea>
           </mat-form-field>
