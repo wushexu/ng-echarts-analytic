@@ -57,6 +57,14 @@ body {
   vertical-align: top;
 }
 
+.config-column.filters {
+  width: 9em;
+}
+
+.config-column.filters .mat-form-field {
+  display: inline;
+}
+
 .config-column ul {
   list-style-type: none;
   padding-left: 1em;

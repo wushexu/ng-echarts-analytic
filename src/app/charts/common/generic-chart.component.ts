@@ -41,7 +41,7 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
   chartHeight = 400;
   chartTranspose = false;
   chartDarkTheme = false;
-  // chartBackgroundColor: string = null; // #404040: null,#333
+  chartTransparentBackground = true;
   chartTitle = '';
   chartSubTitle = '';
   chartToolbox = {
@@ -53,6 +53,9 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
       saveAsImage: {show: true}
     }
   };
+
+  lightBackgroundColor = '#FAFAFA'; // #FAFAFA, white
+  darkBackgroundColor = '#333'; // #404040, #333, black
 
   selectedDim = '';
   selectedDim2 = '';
@@ -195,6 +198,21 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
     this.buildChart(dims, dataset);
   }
 
+  buildOption(): EChartOption {
+    let option: EChartOption = {
+      color: this.chartColors,
+      title: {text: this.chartTitle, subtext: this.chartSubTitle},
+      legend: {},
+      toolbox: this.chartToolbox
+    };
+    if (this.chartTransparentBackground) {
+      option.backgroundColor = 'transparent';
+    } else {
+      option.backgroundColor = this.chartDarkTheme ? this.darkBackgroundColor : this.lightBackgroundColor;
+    }
+    return option;
+  }
+
   buildTwoLayerPie(dims: string[], dataset: Dataset): void {
 
     let cubeDim1 = this.cube.getDimension(dims[0]);
@@ -219,32 +237,28 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
       }
       innerData.push({name: row[dim1], value: sum});
     }
-    let title = {text: this.chartTitle, subtext: this.chartSubTitle};
 
-    const option: EChartOption = {
-      title,
-      tooltip: {},
-      legend: {},
-      toolbox: this.chartToolbox,
-      series: [
-        {
-          name: cubeDim1.desc,
-          type: 'pie',
-          selectedMode: 'single',
-          radius: [0, '30%'],
-          label: {
-            position: 'inner'
+    const option: EChartOption = Object.assign(this.buildOption(), {
+        series: [
+          {
+            name: cubeDim1.desc,
+            type: 'pie',
+            selectedMode: 'single',
+            radius: [0, '30%'],
+            label: {
+              position: 'inner'
+            },
+            data: innerData
           },
-          data: innerData
-        },
-        {
-          name: cubeDim2.desc,
-          type: 'pie',
-          radius: ['40%', '55%'],
-          data: outerData
-        }
-      ]
-    };
+          {
+            name: cubeDim2.desc,
+            type: 'pie',
+            radius: ['40%', '55%'],
+            data: outerData
+          }
+        ]
+      }
+    );
 
     this.myChart.setOption(option);
 
@@ -279,17 +293,13 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
         }
       }
     });
-    let title = {text: this.chartTitle, subtext: this.chartSubTitle};
 
     let xAxis: EChartOption.XAxis = this.chartTranspose ? {type: 'value'} : {type: 'category'};
     let yAxis: EChartOption.YAxis = this.chartTranspose ? {type: 'category'} : {type: 'value'};
 
-    const option: EChartOption = {
-      color: this.chartColors,
-      title,
-      legend: {},
-      tooltip: {
-        trigger: 'axis'/*,
+    const option: EChartOption = Object.assign(this.buildOption(), {
+        tooltip: {
+          trigger: 'axis'/*,
         formatter: (param) => {
           // https://github.com/apache/incubator-echarts/issues/4427
           // console.log(param);
@@ -302,13 +312,13 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
           });
           return html;
         }*/
-      },
-      toolbox: this.chartToolbox,
-      dataset,
-      xAxis,
-      yAxis,
-      series
-    };
+        },
+        dataset,
+        xAxis,
+        yAxis,
+        series
+      }
+    );
 
     // console.log(JSON.stringify(option, null, 2));
 
