@@ -11,14 +11,12 @@ import {CubeDimension, Cube, Dataset} from '../../data/olap';
 export interface DimOption {
   name: string;
   label: string;
-  // selected?: boolean;
   dimension: CubeDimension;
 }
 
 export interface MeasureOption {
   name: string;
   label: string;
-  // selected?: boolean;
   field: FieldDef;
 }
 
@@ -203,7 +201,7 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
       color: this.chartColors,
       title: {text: this.chartTitle, subtext: this.chartSubTitle},
       legend: {},
-      toolbox: this.chartToolbox
+      // toolbox: this.chartToolbox
     };
     if (this.chartTransparentBackground) {
       option.backgroundColor = 'transparent';
@@ -261,7 +259,6 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
     );
 
     this.myChart.setOption(option);
-
   }
 
 
@@ -298,21 +295,7 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
     let yAxis: EChartOption.YAxis = this.chartTranspose ? {type: 'category'} : {type: 'value'};
 
     const option: EChartOption = Object.assign(this.buildOption(), {
-        tooltip: {
-          trigger: 'axis'/*,
-        formatter: (param) => {
-          // https://github.com/apache/incubator-echarts/issues/4427
-          // console.log(param);
-          let params = (param['length'] ? param : [param]) as EChartOption.Tooltip.Format[];
-          let html = params[0].name + '<br>';
-          params.forEach(item => {
-            let axis = this.chartTranspose ? item.encode['x'][0] : item.encode['y'][0];
-            let value = item.value[item.dimensionNames[axis]] || 0;
-            html += '&nbsp;&nbsp;' + item.marker + item.seriesName + ' ' + value + '<br>';
-          });
-          return html;
-        }*/
-        },
+        tooltip: {trigger: 'axis'},
         dataset,
         xAxis,
         yAxis,

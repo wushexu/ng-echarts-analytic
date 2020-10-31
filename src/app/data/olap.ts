@@ -50,7 +50,7 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
     return `sum(${measure.name}) as ${measure.name}`;
   }).join(',');
 
-  let whereClause = null;
+  let whereSql = null;
   if (slice) {
     let conds = [];
     for (let dim in slice) {
@@ -82,7 +82,7 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
 
     }
     if (conds.length > 0) {
-      whereClause = conds.join(' and ');
+      whereSql = conds.join(' and ');
     }
   }
 
@@ -108,8 +108,9 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
   }
 
   let sql = `select ${limit ? 'top ' + limit : ''} ${measureFieldsSql},${dimFieldsSql} from ${factTable.table}`;
-  if (whereClause) {
-    sql = sql + ' where ' + whereClause;
+  sql = sql + ' where ' + dimField0 + ' is not null';
+  if (whereSql) {
+    sql = sql + ' and ' + whereSql;
   }
   sql = sql + ' group by ' + groupByFieldsSql;
   sql = sql + ' order by ' + orderField;

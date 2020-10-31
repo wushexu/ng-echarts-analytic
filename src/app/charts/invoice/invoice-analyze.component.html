@@ -93,9 +93,9 @@
             <mat-label>记录条数</mat-label>
             <mat-select [(ngModel)]="limit" (selectionChange)="refreshChart()">
               <mat-option value="0">（不限）</mat-option>
-              <mat-option value="5">前2条</mat-option>
-              <mat-option value="5">前4条</mat-option>
-              <mat-option value="5">前7条</mat-option>
+              <mat-option value="2">前2条</mat-option>
+              <mat-option value="4">前4条</mat-option>
+              <mat-option value="7">前7条</mat-option>
               <mat-option value="10">前10条</mat-option>
               <mat-option value="20">前20条</mat-option>
             </mat-select>
