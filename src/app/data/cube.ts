@@ -71,7 +71,7 @@ const invoiceCube: Cube = new Cube(
     invoiceDims.fhDate, // 发货日期
     invoiceDims.shCity, // 收货城市
     invoiceDims.shsf, // 收货省份
-    invoiceDims.yjdhDate, // 预计到货日期
+    // invoiceDims.yjdhDate, // 预计到货日期
     invoiceDims.sjdhDate, // 实际到货日期
     invoiceDims.cat // 商品分类
   ],

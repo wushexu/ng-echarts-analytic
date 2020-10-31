@@ -101,7 +101,7 @@ const Tables: TableDef[] = [
       {name: 'fhd_id', type: 'int', desc: '发货点id'},
       {name: 'fhDate', type: 'string', desc: '发货日期'},
       {name: 'yjdhDate', type: 'string', desc: '预计到货日期'},
-      {name: 'sjdhDate', type: 'string', desc: '实际到货日期'},
+      {name: 'sjdhDate', type: 'string', desc: '到货日期'},
       {name: 'shf_id', type: 'int', desc: '收货方id'},
       {name: 'cl_id', type: 'int', desc: '车辆id'},
       {name: 'shCity', type: 'string', desc: '收货城市'},
