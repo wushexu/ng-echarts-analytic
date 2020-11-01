@@ -11,6 +11,9 @@ export abstract class ChartConfig {
   chartTranspose = false;
   chartDarkTheme = true;
   chartTransparentBackground = true;
+  lightBackgroundColor = '#FAFAFA'; // #FAFAFA, white
+  darkBackgroundColor = '#333'; // #404040, #333, black
+
   chartTitle = '';
   chartSubTitle = '';
   chartToolbox = {
@@ -19,12 +22,15 @@ export abstract class ChartConfig {
       // dataView: {show: true, readOnly: false},
       // magicType: {show: true, type: ['line', 'bar']},
       // restore: {show: true},
-      saveAsImage: {show: true}
+      saveAsImage: {
+        show: true,
+        pixelRatio: 2,
+        backgroundColor: this.chartTransparentBackground ?
+          'transparent' :
+          (this.chartDarkTheme ? this.darkBackgroundColor : this.lightBackgroundColor)
+      }
     }
   };
-
-  lightBackgroundColor = '#FAFAFA'; // #FAFAFA, white
-  darkBackgroundColor = '#333'; // #404040, #333, black
 
 
   colorRollForward(): void {
@@ -52,7 +58,7 @@ export abstract class ChartConfig {
       color: this.chartColors,
       title: {text: this.chartTitle, subtext: this.chartSubTitle},
       legend: {},
-      // toolbox: this.chartToolbox
+      toolbox: this.chartToolbox
     };
     if (this.chartTransparentBackground) {
       option.backgroundColor = 'transparent';

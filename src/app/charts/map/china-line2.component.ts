@@ -11,7 +11,7 @@ import {ChartConfig} from '../common/ChartConfig';
 
 @Component({
   selector: 'app-china-line2',
-  templateUrl: './china-line2.component.html'
+  templateUrl: './china-line.component.html'
 })
 export class ChinaLine2Component extends ChartConfig implements OnInit, AfterViewInit {
   @ViewChild('chart') chartDiv: ElementRef;
@@ -72,7 +72,7 @@ export class ChinaLine2Component extends ChartConfig implements OnInit, AfterVie
 
     const option: EChartOption = Object.assign(this.buildOption(),
       {
-        backgroundColor: '#1b1b1b',
+        // backgroundColor: '#1b1b1b',
         color: ['gold', 'aqua', 'lime'],
         tooltip: {
           trigger: 'item',
@@ -93,16 +93,14 @@ export class ChinaLine2Component extends ChartConfig implements OnInit, AfterVie
           map: 'china',
           roam: true,
           zoom: 1,
-          // 地图中心点, 可调节显示的偏移量
           center: [108.348024, 35.463161],
           label: {
-            // 高亮文字隐藏
             emphasis: {
               show: false
             }
           },
           itemStyle: {
-            borderColor: '#FF3333',
+            borderColor: '#CC3333',
             borderWidth: 1,
             areaColor: {
               type: 'radial',
@@ -125,7 +123,6 @@ export class ChinaLine2Component extends ChartConfig implements OnInit, AfterVie
             shadowOffsetY: 2,
             shadowBlur: 10,
             emphasis: {
-              // 鼠标悬浮高亮
               areaColor: 'gray',
               borderWidth: 0
             }
@@ -133,7 +130,6 @@ export class ChinaLine2Component extends ChartConfig implements OnInit, AfterVie
         },
         series: [
           {
-            // 坐标点参数和样式
             type: 'effectScatter',
             coordinateSystem: 'geo',
             data: markPointData,
@@ -154,7 +150,6 @@ export class ChinaLine2Component extends ChartConfig implements OnInit, AfterVie
             }
           },
           {
-            // 线条参数和样式
             type: 'lines',
             // 变化频率
             zlevel: 2,

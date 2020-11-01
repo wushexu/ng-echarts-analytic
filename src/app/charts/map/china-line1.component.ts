@@ -9,7 +9,7 @@ import {ChartConfig} from '../common/ChartConfig';
 
 @Component({
   selector: 'app-china-line1',
-  templateUrl: './china-line1.component.html'
+  templateUrl: './china-line.component.html'
 })
 export class ChinaLine1Component extends ChartConfig implements OnInit, AfterViewInit {
   @ViewChild('chart') chartDiv: ElementRef;
@@ -91,25 +91,23 @@ export class ChinaLine1Component extends ChartConfig implements OnInit, AfterVie
           zoom: 1.1,
           roam: false,
           itemStyle: {
-            normal: {
-              areaColor: {
-                type: 'radial',
-                x: 0.5,
-                y: 0.5,
-                r: 0.8,
-                colorStops: [{
-                  offset: 0,
-                  color: '#09132c' // 0% 处的颜色
-                }, {
-                  offset: 1,
-                  color: '#274d68'  // 100% 处的颜色
-                }],
-                globalCoord: true // 缺省为 false
-              },
-              shadowColor: 'rgb(58,115,192)',
-              shadowOffsetX: 10,
-              shadowOffsetY: 11
+            areaColor: {
+              type: 'radial',
+              x: 0.5,
+              y: 0.5,
+              r: 0.8,
+              colorStops: [{
+                offset: 0,
+                color: '#09132c' // 0% 处的颜色
+              }, {
+                offset: 1,
+                color: '#274d68'  // 100% 处的颜色
+              }],
+              globalCoord: true // 缺省为 false
             },
+            shadowColor: 'rgb(58,115,192)',
+            shadowOffsetX: 10,
+            shadowOffsetY: 11,
             emphasis: {
               areaColor: '#2AB8FF',
               borderWidth: 0,
@@ -123,14 +121,11 @@ export class ChinaLine1Component extends ChartConfig implements OnInit, AfterVie
             name: '南海诸岛',
             itemStyle: {
               areaColor: 'rgba(0, 10, 52, 1)',
-
               borderColor: 'rgba(0, 10, 52, 1)',
-              normal: {
-                opacity: 0,
-                label: {
-                  show: false,
-                  color: '#009cc9',
-                }
+              opacity: 0,
+              label: {
+                show: false,
+                color: '#009cc9'
               }
             },
           }],
@@ -142,7 +137,7 @@ export class ChinaLine1Component extends ChartConfig implements OnInit, AfterVie
           top: 'bottom',
           text: ['高', '低'],// 取值范围的文字
           inRange: {
-            color: ['#ffffff', '#006edd']// 取值范围的颜色
+            color: ['#eeeeee', '#006eff']// 取值范围的颜色
           },
           show: true// 图注
         },
@@ -151,11 +146,9 @@ export class ChinaLine1Component extends ChartConfig implements OnInit, AfterVie
           map: 'china',
           roam: false,
           label: {
-            normal: {
-              show: true,
-              textStyle: {
-                color: '#1DE9B6'
-              }
+            show: true,
+            textStyle: {
+              color: '#1DE9B6'
             },
             emphasis: {
               textStyle: {
@@ -164,23 +157,21 @@ export class ChinaLine1Component extends ChartConfig implements OnInit, AfterVie
             }
           },
           itemStyle: {
-            normal: {
-              borderColor: 'rgb(147, 235, 248)',
-              borderWidth: 1,
-              areaColor: {
-                type: 'radial',
-                x: 0.5,
-                y: 0.5,
-                r: 0.8,
-                colorStops: [{
-                  offset: 0,
-                  color: '#fff' // 0% 处的颜色
-                }, {
-                  offset: 1,
-                  color: '#274d68'  // 100% 处的颜色
-                }],
-                globalCoord: true // 缺省为 false
-              },
+            borderColor: 'rgb(147, 235, 248)',
+            borderWidth: 1,
+            areaColor: {
+              type: 'radial',
+              x: 0.5,
+              y: 0.5,
+              r: 0.8,
+              colorStops: [{
+                offset: 0,
+                color: '#eee' // 0% 处的颜色
+              }, {
+                offset: 1,
+                color: '#274d68'  // 100% 处的颜色
+              }],
+              globalCoord: true // 缺省为 false
             },
             emphasis: {
               areaColor: 'rgb(46,229,206)',
@@ -202,12 +193,10 @@ export class ChinaLine1Component extends ChartConfig implements OnInit, AfterVie
               symbolSize: 7, // 图标大小
             },
             lineStyle: {
-              normal: {
-                color: '#1DE9B6',
-                width: 1, // 线条宽度
-                opacity: 0.1, // 尾迹线条透明度
-                curveness: .3 // 尾迹线条曲直度
-              }
+              color: '#1DE9B6',
+              width: 1, // 线条宽度
+              opacity: 0.1, // 尾迹线条透明度
+              curveness: .3 // 尾迹线条曲直度
             },
             data: [
               {coords: [[118.8062, 31.9208], [119.0543, 36.0222]], lineStyle: {color: '#d68410'}}
