@@ -7,6 +7,7 @@ import {EChartOption} from 'echarts';
 import {DataService, Option} from '../../data/DataService';
 import {FieldDef} from '../../data/schema';
 import {CubeDimension, Cube, Dataset} from '../../data/olap';
+import {ChartConfig} from './ChartConfig';
 
 export interface DimOption {
   name: string;
@@ -21,7 +22,7 @@ export interface MeasureOption {
 }
 
 @Component({template: ''})
-export abstract class GenericChartComponent implements OnInit, AfterViewInit {
+export abstract class GenericChartComponent extends ChartConfig implements OnInit, AfterViewInit {
   @ViewChild('chart') chartDiv: ElementRef;
 
   cube: Cube;
@@ -30,30 +31,6 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
   measureOptions: MeasureOption[] = [];
   catOptions: Option[];
   provOptions: Option[];
-
-  chartColors = ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae',
-    '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'];
-  chartType = 'bar';
-  chartStack = false;
-  chartWidth = 800;
-  chartHeight = 400;
-  chartTranspose = false;
-  chartDarkTheme = true;
-  chartTransparentBackground = true;
-  chartTitle = '';
-  chartSubTitle = '';
-  chartToolbox = {
-    show: false,
-    feature: {
-      // dataView: {show: true, readOnly: false},
-      // magicType: {show: true, type: ['line', 'bar']},
-      // restore: {show: true},
-      saveAsImage: {show: true}
-    }
-  };
-
-  lightBackgroundColor = '#FAFAFA'; // #FAFAFA, white
-  darkBackgroundColor = '#333'; // #404040, #333, black
 
   selectedDim = '';
   selectedDim2 = '';
@@ -72,7 +49,8 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
   myChart: echarts.ECharts;
   currentDataset: Dataset;
 
-  constructor(protected dataService: DataService) {
+  protected constructor(protected dataService: DataService) {
+    super();
   }
 
   ngOnInit(): void {
@@ -113,24 +91,6 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
   measureSelected($event: MatRadioChange): void {
     this.selectedMeasure = $event.value;
     this.refreshChart();
-  }
-
-  colorRollForward(): void {
-    let colors = this.chartColors;
-    let c = colors.shift();
-    colors.push(c);
-    this.refreshChart(true);
-  }
-
-  colorRollBackward(): void {
-    let colors = this.chartColors;
-    let c = colors.pop();
-    colors.unshift(c);
-    this.refreshChart(true);
-  }
-
-  redrawChart(): void {
-    this.refreshChart(true);
   }
 
   abstract buildDataset(dims): Dataset;
@@ -196,21 +156,6 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
     }
 
     this.buildChart(dims, dataset);
-  }
-
-  buildOption(): EChartOption {
-    let option: EChartOption = {
-      color: this.chartColors,
-      title: {text: this.chartTitle, subtext: this.chartSubTitle},
-      legend: {},
-      // toolbox: this.chartToolbox
-    };
-    if (this.chartTransparentBackground) {
-      option.backgroundColor = 'transparent';
-    } else {
-      option.backgroundColor = this.chartDarkTheme ? this.darkBackgroundColor : this.lightBackgroundColor;
-    }
-    return option;
   }
 
   buildTwoLayerPie(dims: string[], dataset: Dataset): void {

@@ -42,6 +42,7 @@ import {BlankComponent} from './sidebar/blank.component';
 import {LogisSiteComponent} from './charts/logis-site/logis-site.component';
 import {ChinaMapComponent} from './charts/map/china-map.component';
 import {LinyiMapComponent} from './charts/map/linyi-map.component';
+import {ChinaLine1Component} from './charts/map/china-line1.component';
 
 @NgModule({
   imports: [
@@ -74,7 +75,8 @@ import {LinyiMapComponent} from './charts/map/linyi-map.component';
     InvoiceAnalyzeComponent,
     LogisSiteComponent,
     ChinaMapComponent,
-    LinyiMapComponent
+    LinyiMapComponent,
+    ChinaLine1Component
   ],
   providers: [
     DataService
