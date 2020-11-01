@@ -45,8 +45,8 @@ export class ChinaLine2Component extends ChartConfig implements OnInit, AfterVie
 
     let centerName = '临沂市';
     let center = {name: centerName, coord: coords[centerName]};
-    let markPointData: any[] = [
-      {name: '上海', value: 100,},
+    let points: any[] = [
+      {name: '上海', value: 100},
       {name: '北京', value: 90},
       {name: '大连市', value: 80},
       {name: '重庆', value: 70},
@@ -60,9 +60,15 @@ export class ChinaLine2Component extends ChartConfig implements OnInit, AfterVie
       {name: '吐鲁番地区', value: 10},
     ];
 
-    markPointData.forEach(point => point.coord = coords[point.name]);
+    let markPointData = points.map(point => {
+      let name = point.name;
+      let coord = coords[name];
+      point.coord = coords[name];
+      let value = coord.concat(point.value);
+      return {name, value};
+    });
 
-    let markLineData = markPointData.map(point => [point, center]);
+    let markLineData = points.map(point => [point, center]);
 
     const option: EChartOption = Object.assign(this.buildOption(),
       {
@@ -72,82 +78,104 @@ export class ChinaLine2Component extends ChartConfig implements OnInit, AfterVie
           trigger: 'item',
           formatter: '{b}'
         },
-        dataRange: {
-          min: 0,
-          max: 100,
-          calculable: true,
-          color: ['#ff3333', 'orange', 'yellow', 'lime', 'aqua'],
-          textStyle: {
-            color: '#fff'
+        geo: {
+          show: true,
+          map: 'china',
+          roam: true,
+          zoom: 1,
+          // 地图中心点, 可调节显示的偏移量
+          center: [108.348024, 35.463161],
+          label: {
+            // 高亮文字隐藏
+            emphasis: {
+              show: false
+            }
           },
-          show: false
+          itemStyle: {
+            normal: {
+              borderColor: '#FF3333',
+              borderWidth: 1,
+              areaColor: {
+                type: 'radial',
+                x: 0.5,
+                y: 0.5,
+                r: 0.8,
+                colorStops: [{
+                  offset: 0,
+                  // 0% 处的颜色
+                  color: 'rgba(0, 0, 0, 0)'
+                },
+                  {
+                    offset: 1,
+                    // 100% 处的颜色
+                    color: 'rgba(0, 0, 0, .3)'
+                  }]
+              },
+              shadowColor: 'rgba(0, 0, 0, 1)',
+              shadowOffsetX: -2,
+              shadowOffsetY: 2,
+              shadowBlur: 10
+            },
+            emphasis: {
+              // 鼠标悬浮高亮
+              areaColor: 'gray',
+              borderWidth: 0
+            }
+          }
         },
         series: [
           {
-            name: '全国',
-            type: 'map',
-            map: 'china',
-            roam: false,
-            hoverable: false,
-            itemStyle: {
-              borderColor: 'rgba(100,149,237,1)',
-              borderWidth: 0.5,
-              areaStyle: {
-                color: '#1b1b1b'
+            // 坐标点参数和样式
+            type: 'effectScatter',
+            coordinateSystem: 'geo',
+            data: markPointData,
+            symbolSize: v => 2 + v[2]/10,
+            showEffectOn: 'render',
+            rippleEffect: {
+              brushType: 'stroke'
+            },
+            label: {
+              normal: {
+                formatter: '{b}',
+                position: 'right',
+                show: true
               }
             },
-            data: [],
-            markLine: {
-              smooth: true,
-              symbol: ['none', 'circle'],
-              symbolSize: 1,
-              itemStyle: {
-                color: '#fff',
-                borderWidth: 1,
-                borderColor: 'rgba(30,144,255,0.5)'
-              },
-              data: []
-            },
-            geoCoord: coords
+            itemStyle: {
+              normal: {
+                color: '#FF4500',
+                shadowBlur: 10,
+                shadowColor: '#FF4500'
+              }
+            }
           },
           {
-            name: '工厂分布',
-            type: 'map',
-            map: 'china',
-            data: [],
-            markLine: {
-              smooth: true,
-              effect: {
-                show: true,
-                scaleSize: 2,
-                period: 30,
-                color: '#fff',
-                shadowBlur: 10
-              },
-              itemStyle: {
-                borderWidth: 1,
-                lineStyle: {
-                  type: 'solid',
-                  shadowBlur: 10
-                }
-              },
-              data: markLineData
+            // 线条参数和样式
+            type: 'lines',
+            // 变化频率
+            zlevel: 2,
+            effect: {
+              show: true,
+              // 箭头指向速度，值越小速度越快
+              period: 4,
+              // 特效尾迹长度,取值0到1,值越大,尾迹越长
+              trailLength: 0.05,
+              symbol: 'arrow',
+              // 图标大小
+              symbolSize: 5
             },
-            markPoint: {
-              symbol: 'emptyCircle',
-              symbolSize: v => 10 + v / 10,
-              effect: {
-                show: true,
-                shadowBlur: 0
-              },
-              itemStyle: {
-                label: {show: false},
-                emphasis: {
-                  label: {position: 'top'}
-                }
-              },
-              data: markPointData
-            }
+            lineStyle: {
+              normal: {
+                color: '#FF4500',
+                // 尾迹线条宽度
+                width: 1,
+                // 尾迹线条透明度
+                opacity: 1,
+                // 尾迹线条曲直度
+                curveness: 0.3
+              }
+            },
+            data: markLineData
           }
         ]
       }
