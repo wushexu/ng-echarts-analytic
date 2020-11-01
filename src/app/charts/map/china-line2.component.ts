@@ -72,11 +72,21 @@ export class ChinaLine2Component extends ChartConfig implements OnInit, AfterVie
 
     const option: EChartOption = Object.assign(this.buildOption(),
       {
-        // backgroundColor: '#1b1b1b',
+        backgroundColor: '#1b1b1b',
         color: ['gold', 'aqua', 'lime'],
         tooltip: {
           trigger: 'item',
           formatter: '{b}'
+        },
+        dataRange: {
+          min: 0,
+          max: 100,
+          calculable: true,
+          color: ['#ff3333', 'orange', 'yellow', 'lime', 'aqua'],
+          textStyle: {
+            color: '#fff'
+          },
+          show: false
         },
         geo: {
           show: true,
@@ -92,30 +102,28 @@ export class ChinaLine2Component extends ChartConfig implements OnInit, AfterVie
             }
           },
           itemStyle: {
-            normal: {
-              borderColor: '#FF3333',
-              borderWidth: 1,
-              areaColor: {
-                type: 'radial',
-                x: 0.5,
-                y: 0.5,
-                r: 0.8,
-                colorStops: [{
-                  offset: 0,
-                  // 0% 处的颜色
-                  color: 'rgba(0, 0, 0, 0)'
-                },
-                  {
-                    offset: 1,
-                    // 100% 处的颜色
-                    color: 'rgba(0, 0, 0, .3)'
-                  }]
+            borderColor: '#FF3333',
+            borderWidth: 1,
+            areaColor: {
+              type: 'radial',
+              x: 0.5,
+              y: 0.5,
+              r: 0.8,
+              colorStops: [{
+                offset: 0,
+                // 0% 处的颜色
+                color: 'rgba(0, 0, 0, 0)'
               },
-              shadowColor: 'rgba(0, 0, 0, 1)',
-              shadowOffsetX: -2,
-              shadowOffsetY: 2,
-              shadowBlur: 10
+                {
+                  offset: 1,
+                  // 100% 处的颜色
+                  color: 'rgba(0, 0, 0, .3)'
+                }]
             },
+            shadowColor: 'rgba(0, 0, 0, 1)',
+            shadowOffsetX: -2,
+            shadowOffsetY: 2,
+            shadowBlur: 10,
             emphasis: {
               // 鼠标悬浮高亮
               areaColor: 'gray',
@@ -129,24 +137,20 @@ export class ChinaLine2Component extends ChartConfig implements OnInit, AfterVie
             type: 'effectScatter',
             coordinateSystem: 'geo',
             data: markPointData,
-            symbolSize: v => 2 + v[2]/10,
+            symbolSize: v => 2 + v[2] / 10,
             showEffectOn: 'render',
             rippleEffect: {
               brushType: 'stroke'
             },
             label: {
-              normal: {
-                formatter: '{b}',
-                position: 'right',
-                show: true
-              }
+              formatter: '{b}',
+              position: 'right',
+              show: true
             },
             itemStyle: {
-              normal: {
-                color: '#FF4500',
-                shadowBlur: 10,
-                shadowColor: '#FF4500'
-              }
+              color: '#FF4500',
+              shadowBlur: 10,
+              shadowColor: '#FF4500'
             }
           },
           {
@@ -165,15 +169,13 @@ export class ChinaLine2Component extends ChartConfig implements OnInit, AfterVie
               symbolSize: 5
             },
             lineStyle: {
-              normal: {
-                color: '#FF4500',
-                // 尾迹线条宽度
-                width: 1,
-                // 尾迹线条透明度
-                opacity: 1,
-                // 尾迹线条曲直度
-                curveness: 0.3
-              }
+              color: '#FF4500',
+              // 尾迹线条宽度
+              width: 1,
+              // 尾迹线条透明度
+              opacity: 1,
+              // 尾迹线条曲直度
+              curveness: 0.3
             },
             data: markLineData
           }
