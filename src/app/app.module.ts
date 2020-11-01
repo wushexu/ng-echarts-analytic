@@ -40,16 +40,10 @@ import {DataService} from './data/DataService';
 import {InvoiceAnalyzeComponent} from './charts/invoice/invoice-analyze.component';
 import {BlankComponent} from './sidebar/blank.component';
 import {LogisSiteComponent} from './charts/logis-site/logis-site.component';
+import {ChinaMapComponent} from './charts/map/china-map.component';
+import {LinyiMapComponent} from './charts/map/linyi-map.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    SidebarComponent,
-    BlankComponent,
-    FhComponent,
-    InvoiceAnalyzeComponent,
-    LogisSiteComponent
-  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -71,6 +65,16 @@ import {LogisSiteComponent} from './charts/logis-site/logis-site.component';
     MatInputModule,
     MatSelectModule,
     MatSlideToggleModule
+  ],
+  declarations: [
+    AppComponent,
+    SidebarComponent,
+    BlankComponent,
+    FhComponent,
+    InvoiceAnalyzeComponent,
+    LogisSiteComponent,
+    ChinaMapComponent,
+    LinyiMapComponent
   ],
   providers: [
     DataService

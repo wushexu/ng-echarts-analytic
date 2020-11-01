@@ -35,10 +35,10 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
     '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'];
   chartType = 'bar';
   chartStack = false;
-  chartWidth = 1200;
+  chartWidth = 800;
   chartHeight = 400;
   chartTranspose = false;
-  chartDarkTheme = false;
+  chartDarkTheme = true;
   chartTransparentBackground = true;
   chartTitle = '';
   chartSubTitle = '';
@@ -187,7 +187,7 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
     }
 
     const holder = this.chartDiv.nativeElement as HTMLDivElement;
-    this.myChart = echarts.init(holder, this.chartDarkTheme ? 'dark' : null); // light
+    this.myChart = echarts.init(holder, this.chartDarkTheme ? 'dark' : null/*, {renderer: 'svg'}*/); // light
 
     if (this.chartType === 'pie' && dims.length === 2) {
       // 两级饼图
@@ -297,7 +297,7 @@ export abstract class GenericChartComponent implements OnInit, AfterViewInit {
       }
     });
 
-    console.log(JSON.stringify(series, null, 2));
+    // console.log(JSON.stringify(series, null, 2));
 
     let xAxis: EChartOption.XAxis = this.chartTranspose ? {type: 'value'} : {type: 'category'};
     let yAxis: EChartOption.YAxis = this.chartTranspose ? {type: 'category'} : {type: 'value'};

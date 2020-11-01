@@ -10,7 +10,6 @@ import {GenericChartComponent, DimOption, MeasureOption} from '../common/generic
   styleUrls: ['./logis-site.component.css']
 })
 export class LogisSiteComponent extends GenericChartComponent implements OnInit, AfterViewInit {
-  @ViewChild('chart') chartDiv: ElementRef;
 
   cube: Cube = cubes.site;
 
