@@ -5,9 +5,9 @@ import * as echarts from 'echarts';
 // @ts-ignore
 import {default as linyi} from './linyi-371300.json';
 
-import {DataService, Option} from '../../data/DataService';
-import {query, CubeDimension, Cube, cubes, Dataset} from '../../data/olap';
-import {GenericChartComponent, DimOption, MeasureOption} from '../common/generic-chart.component';
+import {DataService} from '../../data/DataService';
+import {query, Cube, cubes, Dataset} from '../../data/olap';
+import {GenericChartComponent, DimOption} from '../common/generic-chart.component';
 
 @Component({
   selector: 'app-linyi-map',

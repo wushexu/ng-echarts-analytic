@@ -76,11 +76,11 @@ const invoiceCube: Cube = new Cube(
     invoiceDims.cat // 商品分类
   ],
   [
-    {name: 'quantity', type: 'int', desc: '数量'},
-    {name: 'weight', type: 'int', desc: '重量'},
-    {name: 'zj', type: 'int', desc: '总价'},
-    {name: 'yf', type: 'int', desc: '运费'},
-    {name: 'count', type: 'int', desc: '条数', aggSql: 'count(1) as [count]'}],
+    {name: 'quantity', type: 'int', desc: '数量（件）'},
+    {name: 'weight', type: 'int', desc: '重量（千克）'},
+    {name: 'zj', type: 'int', desc: '交易量（元）'},
+    {name: 'yf', type: 'int', desc: '运费（元）'},
+    {name: 'count', type: 'int', desc: '单数', aggSql: 'count(1) as [count]'}],
   'zj');
 
 const siteCube: Cube = new Cube(
@@ -94,8 +94,8 @@ const siteCube: Cube = new Cube(
     invoiceDims.siteDistrict  // 县区
   ],
   [
-    {name: 'weight', type: 'int', desc: '商品重量'},
-    {name: 'zj', type: 'int', desc: '商品总价'},
+    {name: 'weight', type: 'int', desc: '商品重量（千克）'},
+    {name: 'zj', type: 'int', desc: '商品总价（元）'},
     {name: 'count', type: 'int', desc: '车辆数', aggSql: 'count(1) as [count]'}],
   'count');
 

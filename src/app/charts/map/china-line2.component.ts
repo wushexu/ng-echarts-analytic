@@ -178,7 +178,7 @@ export class ChinaLine2Component extends ChartConfig implements OnInit, AfterVie
       }
     );
 
-    console.log(JSON.stringify(option, null, 2));
+    // console.log(JSON.stringify(option, null, 2));
 
     this.myChart.setOption(option);
   }

@@ -40,22 +40,6 @@
         </ul>
       </mat-radio-group>
     </div>
-    <div class="config-column">
-      <div class="title">维度2</div>
-      <mat-radio-group [(ngModel)]="selectedDim2" (change)="dimSelected2($event)">
-        <ul class="radio-options">
-          <li *ngFor="let option of dim2Options">
-            <!--<mat-checkbox [(ngModel)]="option.selected" color="primary" (ngModelChange)="refreshChart()">
-              {{option.label}}
-            </mat-checkbox>-->
-            <mat-radio-button color="primary" [value]="option.name">{{option.label}}</mat-radio-button>
-          </li>
-          <li>
-            <mat-radio-button color="primary" value="">（无）</mat-radio-button>
-          </li>
-        </ul>
-      </mat-radio-group>
-    </div>
     <div class="config-column filters">
       <div class="title">筛选</div>
       <ul>
@@ -111,7 +95,7 @@
             深色主题
           </mat-slide-toggle>
           &nbsp;&nbsp;
-          <mat-slide-toggle [(ngModel)]="chartTransparentBackground" color="primary" labelPosition="before"
+          <mat-slide-toggle [(ngModel)]="transparentBackground" color="primary" labelPosition="before"
                             (change)="redrawChart()">
             透明背景
           </mat-slide-toggle>

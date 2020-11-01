@@ -118,8 +118,17 @@
       </ul>
     </div>
     <div class="config-column">
-      <div class="title">数据集</div>
+      <div class="title">显示</div>
       <ul>
+        <li>
+          <mat-form-field class="inline-number-input">
+            <input matInput placeholder="宽" [(ngModel)]="chartWidth" type="number" step="100" (change)="redrawChart()">
+          </mat-form-field>
+          &nbsp;
+          <mat-form-field class="inline-number-input">
+            <input matInput placeholder="高" [(ngModel)]="chartHeight" type="number" step="100" (change)="redrawChart()">
+          </mat-form-field>
+        </li>
         <li class="slide-toggle">
           <mat-slide-toggle [(ngModel)]="overwriteDim1" color="primary" labelPosition="before"
                             (change)="redrawChart()">
@@ -131,7 +140,7 @@
         <li>
           <mat-form-field>
             <mat-label>维度1</mat-label>
-            <textarea matInput rows="7" [disabled]="!overwriteDim1"
+            <textarea matInput rows="5" [disabled]="!overwriteDim1"
                       [(ngModel)]='dim1Values' (blur)="redrawChart()"
                       placeholder="输入维度值，一行一个"></textarea>
           </mat-form-field>
@@ -151,17 +160,6 @@
               <mat-option value="scatter">散点图</mat-option>
               <mat-option value="effectScatter">散点图（涟漪）</mat-option>
               <!--<mat-option value="map">地图</mat-option>-->
-              <!--<mat-option value="radar">雷达图</mat-option>
-              <mat-option value="tree">树图</mat-option>
-              <mat-option value="treemap">树图（面积）</mat-option>
-              <mat-option value="sunburst">旭日图</mat-option>
-              <mat-option value="boxplot">盒状图</mat-option>
-              <mat-option value="candlestick">K线图</mat-option>
-              <mat-option value="heatmap">热力图</mat-option>
-              <mat-option value="parallel">平行坐标系</mat-option>
-              <mat-option value="lines">路径图</mat-option>
-              <mat-option value="graph">关系图</mat-option>
-              <mat-option value="gauge">仪表盘</mat-option>-->
             </mat-select>
           </mat-form-field>
         </li>
@@ -178,12 +176,14 @@
           </mat-slide-toggle>
         </li>
         <li>
-          <mat-form-field class="inline-number-input">
-            <input matInput placeholder="宽" [(ngModel)]="chartWidth" type="number" step="100" (change)="redrawChart()">
-          </mat-form-field>
-          &nbsp;
-          <mat-form-field class="inline-number-input">
-            <input matInput placeholder="高" [(ngModel)]="chartHeight" type="number" step="100" (change)="redrawChart()">
+          <mat-form-field>
+            <mat-label>开始颜色</mat-label>
+            <mat-select [(ngModel)]="startColorIndex" (selectionChange)="startColorChanged()">
+              <mat-option *ngFor="let color of chartColorsOri; let index=index" [value]="index"
+                          [style.background]="color">
+                #{{index+1}}
+              </mat-option>
+            </mat-select>
           </mat-form-field>
         </li>
         <li>
@@ -203,7 +203,7 @@
             深色主题
           </mat-slide-toggle>
           &nbsp;&nbsp;
-          <mat-slide-toggle [(ngModel)]="chartTransparentBackground" color="primary" labelPosition="before"
+          <mat-slide-toggle [(ngModel)]="transparentBackground" color="primary" labelPosition="before"
                             (change)="redrawChart()">
             透明背景
           </mat-slide-toggle>
