@@ -86,8 +86,12 @@ body {
   width: 6em;
 }
 
-.config-column li.slide-toggle {
+.config-column li.slide-toggle:not(:last-child) {
   padding-bottom: 0.9em;
+}
+
+.config-column li.slide-toggle:not(:first-child) {
+  padding-top: 1.2em;
 }
 
 .config-column li .measure-name-input {

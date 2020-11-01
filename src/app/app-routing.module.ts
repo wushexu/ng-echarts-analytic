@@ -7,6 +7,7 @@ import {LogisSiteComponent} from './charts/logis-site/logis-site.component';
 import {ChinaMapComponent} from './charts/map/china-map.component';
 import {LinyiMapComponent} from './charts/map/linyi-map.component';
 import {ChinaLine1Component} from './charts/map/china-line1.component';
+import {ChinaLine2Component} from './charts/map/china-line2.component';
 
 
 const routes: Routes = [
@@ -16,7 +17,8 @@ const routes: Routes = [
   {path: 'fh', component: FhComponent},
   {path: 'cn', component: ChinaMapComponent},
   {path: 'ly', component: LinyiMapComponent},
-  {path: 'cn-l1', component: ChinaLine1Component}
+  {path: 'line1', component: ChinaLine1Component},
+  {path: 'line2', component: ChinaLine2Component}
 ];
 
 @NgModule({

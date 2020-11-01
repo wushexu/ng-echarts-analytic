@@ -133,8 +133,6 @@ export class ChinaLine1Component extends ChartConfig implements OnInit, AfterVie
                 }
               }
             },
-
-
           }],
         },
         visualMap: {
@@ -150,6 +148,7 @@ export class ChinaLine1Component extends ChartConfig implements OnInit, AfterVie
         },
         series: [{
           type: 'map',
+          map: 'china',
           roam: false,
           label: {
             normal: {
@@ -164,7 +163,6 @@ export class ChinaLine1Component extends ChartConfig implements OnInit, AfterVie
               }
             }
           },
-
           itemStyle: {
             normal: {
               borderColor: 'rgb(147, 235, 248)',
@@ -191,7 +189,6 @@ export class ChinaLine1Component extends ChartConfig implements OnInit, AfterVie
             }
           },
           zoom: 1.1,
-          map: 'china',// 使用
           data: dataList
         }, // 地图线的动画效果
           {
@@ -232,7 +229,6 @@ export class ChinaLine1Component extends ChartConfig implements OnInit, AfterVie
               , {coords: [[102.9199, 25.46639], [119.0543, 36.0222]], lineStyle: {color: '#96cc34'}}
             ]
           }
-
         ]
       }
     );
