@@ -85,6 +85,9 @@ export abstract class GenericChartComponent extends ChartConfig implements OnIni
 
   dimSelected2($event: MatRadioChange): void {
     this.selectedDim2 = $event.value;
+    if (!this.selectedDim2 && this.chartStack) {
+      this.chartStack = false;
+    }
     this.refreshChart();
   }
 

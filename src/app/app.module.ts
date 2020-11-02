@@ -33,7 +33,6 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 // import {MatStepperModule} from '@angular/material/stepper';
 
 import {AppRoutingModule} from './app-routing.module';
-import {FhComponent} from './charts/fh/fh.component';
 import {AppComponent} from './app.component';
 import {SidebarComponent} from './sidebar/sidebar.component';
 import {DataService} from './data/DataService';
@@ -72,7 +71,6 @@ import {ChinaLine2Component} from './charts/map/china-line2.component';
     AppComponent,
     SidebarComponent,
     BlankComponent,
-    FhComponent,
     InvoiceAnalyzeComponent,
     LogisSiteComponent,
     ChinaMapComponent,
