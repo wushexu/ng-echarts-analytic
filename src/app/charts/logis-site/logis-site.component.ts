@@ -55,7 +55,16 @@ export class LogisSiteComponent extends GenericChartComponent implements OnInit,
     }
 
     let measures = [this.selectedMeasure];
-    return query({cubeName: this.cube.name, dims, measures, slice, limit: this.limit});
+    let overwriteDim2Values = null;
+
+    if (this.selectedDim2 && this.overwriteDim2 && this.dim2Values) {
+      let values = this.dim2Values.split(/\r?\n/).map(v => v.trim()).filter(v => v.length > 0);
+      if (values.length > 0) {
+        overwriteDim2Values = values;
+      }
+    }
+
+    return query({cubeName: this.cube.name, dims, measures, slice, limit: this.limit, overwriteDim2Values});
   }
 
 }

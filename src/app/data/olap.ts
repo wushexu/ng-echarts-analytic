@@ -14,9 +14,12 @@ interface Dataset {
 alasql.fn.concat = (a, b) => `${a || ''}.${b}`;
 
 
-function query(options?: { dims: string[], cubeName?: string, measures?: string[], slice?: any, limit?: number }): Dataset {
+function query(options?: {
+  dims: string[], cubeName?: string, measures?: string[], slice?: any, limit?: number,
+  overwriteDim2Values?: string[]
+}): Dataset {
 
-  let {dims, cubeName, measures, slice, limit} = options;
+  let {dims, cubeName, measures, slice, limit, overwriteDim2Values} = options;
 
   let cube: Cube = cubes[cubeName];
   if (!cube) {
@@ -120,10 +123,11 @@ function query(options?: { dims: string[], cubeName?: string, measures?: string[
   data = data.filter(row => row[dimField0]);
   // console.log(data);
 
-  return buildDataset(cubeDimensions, measureFields, data);
+  return buildDataset(cubeDimensions, measureFields, data, overwriteDim2Values);
 }
 
-function buildDataset(cubeDimensions: CubeDimension[], measureFields: Measure[], data: any[]): Dataset {
+function buildDataset(cubeDimensions: CubeDimension[], measureFields: Measure[], data: any[],
+                      overwriteDim2Values: string[]): Dataset {
 
   let chartDimensions = [];
   cubeDimensions.map(cubeDimension => {
@@ -140,7 +144,10 @@ function buildDataset(cubeDimensions: CubeDimension[], measureFields: Measure[],
     let groups = groupBy(data, obj => obj[dimField]);
     let newData = [];
 
-    let dim2Values = new Set();
+    let dim2ValuesMap = new Map();
+
+    let overwriteDim2 = overwriteDim2Values && overwriteDim2Values.length > 0;
+    let dim2ValuesIndex = 0;
 
     for (let k in groups) {
       if (!groups.hasOwnProperty(k)) {
@@ -155,8 +162,21 @@ function buildDataset(cubeDimensions: CubeDimension[], measureFields: Measure[],
         let meaVal = row[meaField];
         let dim2Val = row[dimField2];
         if (dim2Val) {
-          dim2Values.add(dim2Val);
-          row0[dim2Val] = meaVal;
+          if (!overwriteDim2) {
+            dim2ValuesMap.set(dim2Val, dim2Val);
+            row0[dim2Val] = meaVal;
+          } else {
+            let overwrite = dim2ValuesMap.get(dim2Val);
+            if (!overwrite) {
+              if (dim2ValuesIndex >= overwriteDim2Values.length) {
+                continue;
+              }
+              overwrite = overwriteDim2Values[dim2ValuesIndex];
+              dim2ValuesMap.set(dim2Val, overwrite);
+              dim2ValuesIndex++;
+            }
+            row0[overwrite] = meaVal;
+          }
         }
       }
       delete row0[dimField2];
@@ -166,7 +186,7 @@ function buildDataset(cubeDimensions: CubeDimension[], measureFields: Measure[],
     data = newData;
 
     chartDimensions.pop();
-    for (let dim2Val of dim2Values) {
+    for (let [dim2ValOri, dim2Val] of dim2ValuesMap) {
       chartDimensions.push({name: dim2Val, displayName: dim2Val, type: 'number'});
     }
     // console.log(data);

@@ -43,6 +43,8 @@ export abstract class GenericChartComponent extends ChartConfig implements OnIni
   limit: 0;
   overwriteDim1 = false;
   dim1Values = '';
+  overwriteDim2 = false;
+  dim2Values = '';
   overwriteMeasure = false;
   measureName = '';
 
