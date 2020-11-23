@@ -1,8 +1,8 @@
-import {Component, OnInit, AfterViewInit, ViewChild, ElementRef} from '@angular/core';
+import {Component, OnInit, AfterViewInit} from '@angular/core';
 
-import {DataService, Option} from '../../data/DataService';
-import {query, CubeDimension, Cube, cubes, Dataset} from '../../data/olap';
-import {GenericChartComponent, DimOption, MeasureOption} from '../common/generic-chart.component';
+import {DataService} from '../../data/DataService';
+import {query, Cube, cubes, Dataset} from '../../data/olap';
+import {GenericChartComponent, DimOption} from '../common/generic-chart.component';
 
 @Component({
   selector: 'app-logis-site',
@@ -64,7 +64,10 @@ export class LogisSiteComponent extends GenericChartComponent implements OnInit,
       }
     }
 
-    return query({cubeName: this.cube.name, dims, measures, slice, limit: this.limit, overwriteDim2Values});
+    return query({
+      cubeName: this.cube.name, dims, measures, slice, limit: this.limit,
+      overwriteDim2Values, overwriteMeasureValue: this.overwriteMeasureValueOpt
+    });
   }
 
 }

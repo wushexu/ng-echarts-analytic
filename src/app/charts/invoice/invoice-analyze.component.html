@@ -28,6 +28,44 @@
       </ul>
     </div>
     <div class="config-column">
+      <div class="title">指标值</div>
+      <mat-radio-group [(ngModel)]="overwriteMeasureValue" (change)="overwriteMeasureValueSelected($event)">
+        <ul class="radio-options">
+          <li>
+            <mat-radio-button color="accent" value="">不修改</mat-radio-button>
+          </li>
+          <li>
+            <mat-radio-button color="accent" value="multiply">
+              <mat-form-field>
+                <mat-label>乘数</mat-label>
+                <mat-select [(ngModel)]="measureValueMultiply" (selectionChange)="refreshChart()">
+                  <mat-option [value]="0.001">1/1000</mat-option>
+                  <mat-option [value]="0.01">1/100</mat-option>
+                  <mat-option [value]="0.1">1/10</mat-option>
+                  <mat-option [value]="10">10</mat-option>
+                  <mat-option [value]="100">100</mat-option>
+                  <mat-option [value]="1000">1000</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </mat-radio-button>
+          </li>
+          <li>
+            <mat-radio-button color="accent" value="random">随机</mat-radio-button>
+            &nbsp;&nbsp;
+            <mat-form-field class="inline-number-input">
+              <input matInput placeholder="最小" [(ngModel)]="measureValueRandom.min" type="number" step="10"
+                     (change)="refreshChart()">
+            </mat-form-field>
+            &nbsp;
+            <mat-form-field class="inline-number-input">
+              <input matInput placeholder="最大" [(ngModel)]="measureValueRandom.max" type="number" step="10"
+                     (change)="refreshChart()">
+            </mat-form-field>
+          </li>
+        </ul>
+      </mat-radio-group>
+    </div>
+    <div class="config-column">
       <div class="title">维度1</div>
       <mat-radio-group [(ngModel)]="selectedDim" (change)="dimSelected($event)">
         <ul class="radio-options">

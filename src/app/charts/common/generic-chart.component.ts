@@ -6,7 +6,7 @@ import {EChartOption} from 'echarts';
 
 import {DataService, Option} from '../../data/DataService';
 import {FieldDef} from '../../data/schema';
-import {CubeDimension, Cube, Dataset} from '../../data/olap';
+import {CubeDimension, Cube, Dataset, OverwriteMeasureValue} from '../../data/olap';
 import {ChartConfig} from './ChartConfig';
 
 export interface DimOption {
@@ -48,6 +48,10 @@ export abstract class GenericChartComponent extends ChartConfig implements OnIni
   overwriteMeasure = false;
   measureName = '';
 
+  overwriteMeasureValue: '' | 'multiply' | 'random';
+  measureValueMultiply = 1;
+  measureValueRandom = {min: 1, max: 100};
+
   myChart: echarts.ECharts;
   currentDataset: Dataset;
 
@@ -80,6 +84,18 @@ export abstract class GenericChartComponent extends ChartConfig implements OnIni
     this.refreshChart();
   }
 
+  get overwriteMeasureValueOpt(): OverwriteMeasureValue {
+    let overwriteMeasureValue: OverwriteMeasureValue = null;
+    if (this.overwriteMeasureValue) {
+      overwriteMeasureValue = {
+        type: this.overwriteMeasureValue,
+        multiply: this.measureValueMultiply,
+        random: this.measureValueRandom
+      };
+    }
+    return overwriteMeasureValue;
+  }
+
   dimSelected($event: MatRadioChange): void {
     this.selectedDim = $event.value;
     this.refreshChart();
@@ -95,6 +111,11 @@ export abstract class GenericChartComponent extends ChartConfig implements OnIni
 
   measureSelected($event: MatRadioChange): void {
     this.selectedMeasure = $event.value;
+    this.refreshChart();
+  }
+
+  overwriteMeasureValueSelected($event: MatRadioChange): void {
+    // this.selectedMeasure = $event.value;
     this.refreshChart();
   }
 

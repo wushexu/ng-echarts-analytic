@@ -10,16 +10,23 @@ interface Dataset {
   source: any[];
 }
 
+interface OverwriteMeasureValue {
+  type: '' | 'multiply' | 'random';
+  multiply: number;
+  random: { min: number, max: number };
+}
+
 // @ts-ignore
 alasql.fn.concat = (a, b) => `${a || ''}.${b}`;
 
 
 function query(options?: {
   dims: string[], cubeName?: string, measures?: string[], slice?: any, limit?: number,
-  overwriteDim2Values?: string[]
+  overwriteDim2Values?: string[],
+  overwriteMeasureValue?: OverwriteMeasureValue
 }): Dataset {
 
-  let {dims, cubeName, measures, slice, limit, overwriteDim2Values} = options;
+  let {dims, cubeName, measures, slice, limit, overwriteDim2Values, overwriteMeasureValue} = options;
 
   let cube: Cube = cubes[cubeName];
   if (!cube) {
@@ -121,13 +128,14 @@ function query(options?: {
 
   let data = alasql(sql);
   data = data.filter(row => row[dimField0]);
-  // console.log(data);
+  console.log(data);
 
-  return buildDataset(cubeDimensions, measureFields, data, overwriteDim2Values);
+  return buildDataset(cubeDimensions, measureFields, data, overwriteDim2Values, overwriteMeasureValue);
 }
 
 function buildDataset(cubeDimensions: CubeDimension[], measureFields: Measure[], data: any[],
-                      overwriteDim2Values: string[]): Dataset {
+                      overwriteDim2Values: string[],
+                      overwriteMeasureValue: OverwriteMeasureValue): Dataset {
 
   let chartDimensions = [];
   cubeDimensions.map(cubeDimension => {
@@ -137,10 +145,29 @@ function buildDataset(cubeDimensions: CubeDimension[], measureFields: Measure[],
     chartDimensions.push({name: cubeDimension.name, displayName: cubeDimension.desc, type});
   });
 
+  let meaField = measureFields[0].name;
+
+  if (overwriteMeasureValue) {
+    let type = overwriteMeasureValue.type;
+    let multiply = overwriteMeasureValue.multiply || 1;
+    let {min, max} = overwriteMeasureValue.random || {min: 1, max: 100};
+    for (let row of data) {
+      let meaVal = row[meaField];
+      if (typeof meaVal !== 'undefined') {
+        if (type === 'multiply') {
+          row[meaField] = meaVal * multiply;
+        } else if (type === 'random') {
+          let mv = min + (max - min) * Math.random();
+          row[meaField] = Math.round(mv);
+        }
+      }
+    }
+    // console.log(data);
+  }
+
   if (cubeDimensions.length === 2 && measureFields.length === 1) {
     let dimField = cubeDimensions[0].field.name;
     let dimField2 = cubeDimensions[1].field.name;
-    let meaField = measureFields[0].name;
     let groups = groupBy(data, obj => obj[dimField]);
     let newData = [];
 
@@ -199,4 +226,4 @@ function buildDataset(cubeDimensions: CubeDimension[], measureFields: Measure[],
   return {dimensions: chartDimensions, source: data};
 }
 
-export {query, CubeDimension, Measure, Cube, cubes, Dataset};
+export {query, CubeDimension, Measure, Cube, cubes, Dataset, OverwriteMeasureValue};
