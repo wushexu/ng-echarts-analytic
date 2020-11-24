@@ -49,7 +49,7 @@ export abstract class GenericChartComponent extends ChartConfig implements OnIni
   measureName = '';
 
   overwriteMeasureValue: '' | 'multiply' | 'random';
-  measureValueMultiply = 1;
+  measureValueMultiply = 10;
   measureValueRandom = {min: 1, max: 100};
 
   myChart: echarts.ECharts;
@@ -282,6 +282,7 @@ export abstract class GenericChartComponent extends ChartConfig implements OnIni
       }
     );
 
+    console.log(option);
     // console.log(JSON.stringify(option, null, 2));
 
     this.myChart.setOption(option);

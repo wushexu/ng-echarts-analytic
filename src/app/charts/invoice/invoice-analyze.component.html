@@ -36,7 +36,7 @@
           </li>
           <li>
             <mat-radio-button color="accent" value="multiply">
-              <mat-form-field>
+              <mat-form-field class="measure-multiply-field">
                 <mat-label>乘数</mat-label>
                 <mat-select [(ngModel)]="measureValueMultiply" (selectionChange)="refreshChart()">
                   <mat-option [value]="0.001">1/1000</mat-option>
@@ -51,16 +51,17 @@
           </li>
           <li>
             <mat-radio-button color="accent" value="random">随机</mat-radio-button>
-            &nbsp;&nbsp;
-            <mat-form-field class="inline-number-input">
-              <input matInput placeholder="最小" [(ngModel)]="measureValueRandom.min" type="number" step="10"
-                     (change)="refreshChart()">
-            </mat-form-field>
-            &nbsp;
-            <mat-form-field class="inline-number-input">
-              <input matInput placeholder="最大" [(ngModel)]="measureValueRandom.max" type="number" step="10"
-                     (change)="refreshChart()">
-            </mat-form-field>
+            <div class="measure-random-fields">
+              <mat-form-field class="number-input-min">
+                <input matInput placeholder="最小" [(ngModel)]="measureValueRandom.min" type="number" step="10"
+                       (change)="refreshChart()">
+              </mat-form-field>
+              &nbsp;
+              <mat-form-field class="number-input-max">
+                <input matInput placeholder="最大" [(ngModel)]="measureValueRandom.max" type="number" step="10"
+                       (change)="refreshChart()">
+              </mat-form-field>
+            </div>
           </li>
         </ul>
       </mat-radio-group>
@@ -115,7 +116,7 @@
         </ul>
       </mat-radio-group>
     </div>
-    <div class="config-column">
+    <div class="config-column" *ngIf="selectedDim2">
       <div class="title">维值</div>
       <ul>
         <li class="slide-toggle">

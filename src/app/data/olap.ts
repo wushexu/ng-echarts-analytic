@@ -128,7 +128,7 @@ function query(options?: {
 
   let data = alasql(sql);
   data = data.filter(row => row[dimField0]);
-  console.log(data);
+  // console.log(data);
 
   return buildDataset(cubeDimensions, measureFields, data, overwriteDim2Values, overwriteMeasureValue);
 }

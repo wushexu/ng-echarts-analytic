@@ -97,3 +97,20 @@ body {
 .config-column li .measure-name-input {
   width: 8em;
 }
+
+.config-column li .measure-multiply-field {
+  width: 6em;
+}
+
+.config-column li .measure-random-fields {
+  margin-top: 1em;
+  margin-left: 1em;
+}
+
+.config-column li .measure-random-fields .number-input-min {
+  width: 4em;
+}
+
+.config-column li .measure-random-fields .number-input-max {
+  width: 5em;
+}

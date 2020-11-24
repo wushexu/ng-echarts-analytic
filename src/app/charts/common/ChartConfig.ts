@@ -60,7 +60,8 @@ export abstract class ChartConfig {
   startColorChanged(): void {
     let sci = this.startColorIndex;
     let chartColors = this.chartColorsOri.slice(sci);
-    chartColors.concat(this.chartColorsOri.slice(0, sci));
+    let heads = this.chartColorsOri.slice(0, sci);
+    chartColors = chartColors.concat(heads);
     this.chartColors = chartColors;
     this.refreshChart(true);
   }
