@@ -18,21 +18,22 @@ export abstract class ChartConfig {
 
   chartTitle = '';
   chartSubTitle = '';
-  chartToolbox = {
-    show: false,
-    feature: {
-      // dataView: {show: true, readOnly: false},
-      // magicType: {show: true, type: ['line', 'bar']},
-      // restore: {show: true},
-      saveAsImage: {
-        show: true,
-        pixelRatio: 2,
-        backgroundColor: this.transparentBackground ?
-          'transparent' :
-          (this.chartDarkTheme ? this.darkBackgroundColor : this.lightBackgroundColor)
+
+  get chartToolbox(): object {
+    return {
+      show: true,
+      feature: {
+        // dataView: {show: true, readOnly: false},
+        // magicType: {show: true, type: ['line', 'bar']},
+        // restore: {show: true},
+        saveAsImage: {
+          show: true,
+          pixelRatio: 2,
+          backgroundColor: this.chartDarkTheme ? this.darkBackgroundColor : this.lightBackgroundColor
+        }
       }
-    }
-  };
+    };
+  }
 
 
   colorRollForward(): void {

@@ -48,7 +48,7 @@ export abstract class GenericChartComponent extends ChartConfig implements OnIni
   overwriteMeasure = false;
   measureName = '';
 
-  overwriteMeasureValue: '' | 'multiply' | 'random';
+  overwriteMeasureValue: '' | 'multiply' | 'random' = '';
   measureValueMultiply = 10;
   measureValueRandom = {min: 1, max: 100};
 
